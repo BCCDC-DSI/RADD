@@ -18,6 +18,6 @@ cd /arc/project/st-username-1/RADD
 
 | Tasks | Status |
 | :-- | :-- |
-|Step 1: proposed new location: /arc/project/st-ashapi01-1/RADD| done|
-|Step 2: ask for symbolic links to: <br>/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML<br>/arc/project/st-cfjell-1/apptainer| pending |
-
+| Sockeye: proposed new location: /arc/project/st-ashapi01-1/RADD| done|
+| Sockeye: ask for symbolic links to: <br>/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML<br>/arc/project/st-cfjell-1/apptainer| pending |
+| Access to Chris' GitRepo | 50% |
