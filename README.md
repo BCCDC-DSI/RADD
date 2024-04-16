@@ -63,8 +63,11 @@ cd /arc/project/st-username-1/RADD
 
  ```
 
-
 4b. Use apptainer(?)
+
+
+Note: To undo initialization of conda upon startup, issue:
+```conda init --reverse $SHELL```
 
 </details>
 
