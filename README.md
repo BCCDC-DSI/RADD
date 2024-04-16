@@ -77,7 +77,7 @@ Note: To undo initialization of conda upon startup, issue:
 
 | Tasks | Status |
 | :-- | :-- |
-| Sockeye: proposed new location: /arc/project/st-ashapi01-1/RADD| done|
+| Sockeye: proposed new location: ```/arc/project/st-ashapi01-1/RADD``` | request sent on 2024-04-16 |
 | Sockeye: ask for symbolic links to: <br>```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML```<br>```/arc/project/st-cfjell-1/apptainer``` | pending |
 | Access to Chris' GitRepo | 50% |
 | Part 1: replicate analysis on data under ```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML``` | Steps 0 of n |
