@@ -43,6 +43,19 @@ cd /arc/project/st-username-1/RADD
  source ~/.bashrc
  echo -e "$base_dir/miniconda/etc/profile.d/conda.sh" >> ~/.profile
  conda init bash
+ 
+ # installing Mamba for fasta downloading of packages in conda
+ conda install mamba -n base -c conda-forge -y
+ conda update conda -y
+ conda update --all
+ 
+ # Creating R environment in conda
+ mamba create -n R -c conda-forge r-base -y
+
+ # Activating R environment
+ conda activate R
+ mamba install -c conda-forge r-essentials
+
  ```
 
 
