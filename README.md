@@ -13,6 +13,23 @@ ssh username@sockeye.arc.ubc.ca
 cd /arc/project/st-username-1/RADD
 ```
 
+<details>
+4a. Build virtual environment:
+ ```
+ cd $HOME
+ 
+ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+ bash Miniconda3-latest-Linux-x86_64.sh
+ 
+ conda create --prefix /project/st-ljfoster-1/nps-screening/env
+ conda activate /project/st-ljfoster-1/nps-screening/env
+ conda create --name radd
+ conda activate radd
+ conda install r-tidyverse r-magrittr r-argparse; conda install -c bioconda bioconductor-xcms
+ ```
+4b. Use apptainer(?)
+
+</details>
 
 ## Tasks
 
