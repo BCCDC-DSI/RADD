@@ -29,6 +29,24 @@ cd /arc/project/st-username-1/RADD
  conda activate radd
  conda install R; conda install r-tidyverse r-magrittr r-argparse; conda install -c bioconda bioconductor-xcms
  ```
+ 
+ 
+ Strategy 2: https://www.biostars.org/p/450316/
+ 
+ ```
+ cd $HOME
+
+ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh \
+ && chmod +x miniconda.sh && bash miniconda.sh -b -p miniconda
+ 
+ base_dir=$(echo $PWD)
+ 
+ export PATH=$base_dir/miniconda/bin:$PATH
+ source ~/.bashrc
+ echo -e "$base_dir/miniconda/etc/profile.d/conda.sh" >> ~/.profile
+ conda init bash
+ ```
+
 
 4b. Use apptainer(?)
 
