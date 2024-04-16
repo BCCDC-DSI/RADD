@@ -14,7 +14,9 @@ cd /arc/project/st-username-1/RADD
 ```
 
 <details>
+
 4a. Build virtual environment:
+ 
  ```
  cd $HOME
  
@@ -27,9 +29,12 @@ cd /arc/project/st-username-1/RADD
  conda activate radd
  conda install r-tidyverse r-magrittr r-argparse; conda install -c bioconda bioconductor-xcms
  ```
+
 4b. Use apptainer(?)
 
 </details>
+
+
 
 ## Tasks
 
