@@ -1,5 +1,10 @@
 # RADD
 
+
+Notes:
+- Sockeye [not accessible Apr 16, 2024]
+- ComputeCanada [only accessible by Lisa]
+ 
 ## Getting started
 1. Connect to ```myvpn.ubc.ca``` through myVPN
  
@@ -29,7 +34,7 @@ cd /arc/project/st-username-1/RADD
  ```
  
  
- Strategy 2: https://www.biostars.org/p/450316/
+ Strategy 2: https://www.biostars.org/p/450316/  [tested on ComputeCanada 2024-04-16]
  
  ```
  cd $HOME
