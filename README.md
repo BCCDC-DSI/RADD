@@ -30,7 +30,8 @@ cd /arc/project/st-username-1/RADD
 
 4. Build virtual environment
 
-<details>
+ <details>
+  
  Proposal 1: 
  ```
  cd $HOME
@@ -73,11 +74,11 @@ cd /arc/project/st-username-1/RADD
 
  ```
 
-4b. Use apptainer(?)
+ 4b. Use apptainer(?)
 
 
-Note: To undo initialization of conda upon startup, issue:
-```conda init --reverse $SHELL```
+ Note: To undo initialization of conda upon startup, issue:
+ ```conda init --reverse $SHELL```
 
 </details>
 
