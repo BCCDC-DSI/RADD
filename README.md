@@ -6,6 +6,9 @@ Notes:
 - ComputeCanada [only accessible by Lisa]
  
 ## Getting started
+
+1. Setup [Multi-factor authentication](https://mfadevices.id.ubc.ca/). This is mandatory step or you will not be able to SSH.
+   
 1. Connect to ```myvpn.ubc.ca``` through myVPN
    - [Set up guide for Mac users](https://ubc.service-now.com/kb_view.do?sysparm_article=KB0017956#macos)
    - Window users may need to email and request OneDrive link to download an installer, as Lisa did in April, 2024
