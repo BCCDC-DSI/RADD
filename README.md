@@ -5,15 +5,20 @@ Notes:
 - Sockeye [not accessible Apr 16, 2024]
 - ComputeCanada [only accessible by Lisa]
  
-## Getting started
+## One time setup 
 
-1. Setup [Multi-factor authentication](https://mfadevices.id.ubc.ca/). This is mandatory step or you will not be able to SSH.
-   
-1. Connect to ```myvpn.ubc.ca``` through myVPN
+1. Apply for Sockeye allocation: https://flex.redcap.ubc.ca/surveys/?s=7MKJT898LK
+2. Setup [Multi-factor authentication](https://mfadevices.id.ubc.ca/). This is mandatory step or you will not be able to SSH.
+3. Install myVPN:
    - [Set up guide for Mac users](https://ubc.service-now.com/kb_view.do?sysparm_article=KB0017956#macos)
    - Window users may need to email and request OneDrive link to download an installer, as Lisa did in April, 2024
+
+
+## One time setup 
+
+1. Connect to ```myvpn.ubc.ca``` through myVPN app
  
-3. Connect to Sockey through terminal:
+3. Connect to to Sockey through terminal using Secure Socket Shell protocol (SSH):
 ```
 ssh username@sockeye.arc.ubc.ca
 ```
