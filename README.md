@@ -7,7 +7,8 @@ Notes:
  
 ## Getting started
 1. Connect to ```myvpn.ubc.ca``` through myVPN
- - [Set up guide for Mac users](https://ubc.service-now.com/kb_view.do?sysparm_article=KB0017956#macos)
+   - [Set up guide for Mac users](https://ubc.service-now.com/kb_view.do?sysparm_article=KB0017956#macos)
+   - Window users may need to email and request OneDrive link to download an installer, as Lisa did in April, 2024
  
 3. Connect to Sockey through terminal:
 ```
