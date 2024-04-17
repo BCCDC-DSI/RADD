@@ -28,10 +28,10 @@ ssh username@sockeye.arc.ubc.ca
 cd /arc/project/st-username-1/RADD
 ```
 
-<details>
+4. Build virtual environment
 
-4a. Build virtual environment:
- 
+<details>
+ Proposal 1: 
  ```
  cd $HOME
  
@@ -44,7 +44,7 @@ cd /arc/project/st-username-1/RADD
  ```
  
  
- Strategy 2: https://www.biostars.org/p/450316/  [tested on ComputeCanada 2024-04-16]
+ Proposal 2: https://www.biostars.org/p/450316/  [tested on ComputeCanada 2024-04-16]
  
  ```
  cd $HOME
