@@ -2,7 +2,7 @@
 
 
 Notes:
-- Sockeye [not accessible Apr 16, 2024]
+- Sockeye [only accessible by Afraz]
 - ComputeCanada [only accessible by Lisa]
  
 ## One time setup 
