@@ -167,14 +167,12 @@ Rscript /arc/project/st-cfjell-1/git/nps-screening/R/MS/outer-write-ms1-matches-
 
 # To-do
 1. retention time
-   2. see RT panel Fig 2 of paper
-      2. Sandrine has retention time examples, we can train to predict RT on all samples
-         3. our data has RT for each compound
-      3. Then filter results based on predicted RT compared to measured RT
-      4. Also look for clusters of samples that are outside predicted RT rangex 
-         5. 
+2. see RT panel Fig 2 of paper
+    2. Sandrine has retention time examples, we can train to predict RT on all samples
+    3. Our data has RT for each compound
+3. Filter results based on predicted RT compared to measured RT
+4. Look for clusters of samples that are outside predicted RT range x 
 2. mass accuracy
 3. Mike's Nature Machine Learning
-4. See H:\Aaron_stuff-nps-rt-main.zip
-5. 
+4. See H:\Aaron_stuff-nps-rt-main.zip 
 
