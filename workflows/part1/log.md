@@ -8,6 +8,7 @@
 $ salloc --time=1:0:0 --mem=3G --nodes=1 --ntasks=2 --account=st-cfjell-1
 
 #### Load Chris' apptainer
+$ export LC_ALL=C; unset LANGUAGE
 $ cd /arc/project/st-cfjell-1/apptainer
 $ module load gcc
 $ module load apptainer
