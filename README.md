@@ -28,7 +28,7 @@ ssh username@sockeye.arc.ubc.ca
 cd /arc/project/st-username-1/RADD
 ```
 
-4. Build virtual environment
+4a. Build virtual environment
 
  <details>
   
@@ -74,11 +74,12 @@ cd /arc/project/st-username-1/RADD
 
  ```
 
- 4b. Use apptainer(?)
-
-
  Note: To undo initialization of conda upon startup, issue:
  ```conda init --reverse $SHELL```
+
+ 4b. Use apptainer prepared by Chris [see logs](https://github.com/BCCDC-DSI/RADD/blob/main/workflows/part1/log.md)
+
+
 
 </details>
 
