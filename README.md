@@ -76,12 +76,9 @@ cd /arc/project/st-username-1/RADD
 
  Note: To undo initialization of conda upon startup, issue:
  ```conda init --reverse $SHELL```
-
- 4b. Use apptainer prepared by Chris [see logs](https://github.com/BCCDC-DSI/RADD/blob/main/workflows/part1/log.md)
-
-
-
 </details>
+
+4b. Use apptainer prepared by Chris [see logs](https://github.com/BCCDC-DSI/RADD/blob/main/workflows/part1/log.md)
 
 
 
