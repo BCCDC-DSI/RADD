@@ -31,22 +31,29 @@ go( "/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/2023-2649BG01.mzML"  )
 
 ## 2024-04-25
 
-- After binding the shell, able to progress a bit.
-- Getting error 
+- After adding line to bind the shell, able to progress a bit:
+   
+  ```
+  Detecting mass traces at 25 ppm ... OK
+  Detecting chromatographic peaks in 31139 regions of interest ... OK: 7601 found.
+  ```
 
-```
-  # save all MS/MS spectra detected in this file
-  spectra_df = data.frame(spectrum_name = names(spectra)) %>%
-    separate(spectrum_name, into = c('chrom_peak', 'file', 'spectrum'),
-             sep = "\\.", remove = FALSE) %>%
-    dplyr::select(-file)
-
-```
+- Getting error:
+  ```
+    # save all MS/MS spectra detected in this file
+    spectra_df = data.frame(spectrum_name = names(spectra)) %>%
+      separate(spectrum_name, into = c('chrom_peak', 'file', 'spectrum'),
+               sep = "\\.", remove = FALSE) %>%
+      dplyr::select(-file)
+  
+  ```
 
 - Close inspection shows:
+  ```
+  > names(spectra)
+  NULL
+  ```
 
-```
-> names(spectra)
-NULL
-```
+
+
 
