@@ -12,6 +12,7 @@ export LC_ALL=C; unset LANGUAGE
 cd /arc/project/st-cfjell-1/apptainer
 module load gcc
 module load apptainer
+apptainer shell --bind /arc/software,/arc/home,/arc/project,/scratch ubuntu.sandbox
 
 #### Launch R Studio
 R
