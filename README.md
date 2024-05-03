@@ -98,7 +98,7 @@ cd /arc/project/st-username-1/RADD
  
 - [ ] working script from start to end developed
 - [ ] working script tested
-- [ ] outputs available for part 2  (*.Rd)
+- [ ] outputs available for part 2  (*.RData)
 - [ ] ...
 
 </details>
