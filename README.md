@@ -82,7 +82,7 @@ cd /arc/project/st-username-1/RADD
 
 
 
-## Tasks
+## Summary of tasks
 
 | Tasks | Status |
 | :-- | :-- |
@@ -90,5 +90,8 @@ cd /arc/project/st-username-1/RADD
 | Sockeye: ask for symbolic links to: <br>```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML```<br>```/arc/project/st-cfjell-1/apptainer``` | not needed |
 | Access to Chris' GitRepo | 50% |
 | Part 1: replicate analysis on data under ```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML``` | Steps 1 of 5 |
-| | - [ ] working script from start to end <br> - [ ] outputs available for part 2 |
 
+<details>
+- [ ] working script from start to end
+- [ ] outputs available for part 2 
+</details>
