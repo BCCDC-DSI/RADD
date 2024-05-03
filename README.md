@@ -92,6 +92,19 @@ cd /arc/project/st-username-1/RADD
 | Part 1: replicate analysis on data under ```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML``` | Steps 1 of 5 |
 
 <details>
+<summary>Part 1 </summary>
+ 
 - [ ] working script from start to end
-- [ ] outputs available for part 2 
+- [ ] outputs available for part 2
+- [ ] ...
+
+</details>
+
+
+
+<details>
+<summary>Part 2 </summary>
+ 
+TBD
+
 </details>
