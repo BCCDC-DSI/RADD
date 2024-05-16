@@ -39,9 +39,10 @@ cd /arc/project/st-username-1/RADD
  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
  bash Miniconda3-latest-Linux-x86_64.sh
 
- conda create --name radd
- conda activate radd
- conda install R; conda install r-tidyverse r-magrittr r-argparse; conda install -c bioconda bioconductor-xcms
+ $HOME/miniconda3/bin/conda create --prefix nps-screen;
+ $HOME/miniconda3/bin/conda activate nps-screen;
+ $HOME/miniconda3/bin/conda install R r-tidyverse r-magrittr r-argparse;
+ $HOME/miniconda3/bin/conda install -c bioconda bioconductor-xcms
  ```
  
  
