@@ -2,8 +2,8 @@
 
 
 Notes:
-- Sockeye [only accessible by Afraz]
-- ComputeCanada [only accessible by Lisa]
+- Sockeye: accessible by Afraz + Lisa
+- ComputeCanada: accessible by Lisa
  
 ## One time setup 
 
