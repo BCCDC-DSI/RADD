@@ -11,7 +11,9 @@ from rdkit import Chem
 from tqdm import tqdm
 
 # set working directory
-git_dir = os.path.expanduser("~/git/NPS-generation")
+# git_dir = os.path.expanduser("~/git/NPS-generation")
+git_dir = os.path.expanduser("/arc/project/st-ashapi01-1/RADD/code/NPS-generation")
+
 python_dir = git_dir + "/python"
 os.chdir(python_dir)
 sys.path.append(python_dir)
@@ -23,8 +25,13 @@ from functions import clean_mols, remove_salts_solvents, read_smiles, \
 from datasets import Vocabulary
 
 # parse arguments
-input_file = sys.argv[1]
-output_file = sys.argv[2]
+try:
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+except:
+    input_file =  ''
+    output_file = ''
+
 
 # read SMILES
 basename = os.path.basename(input_file)
