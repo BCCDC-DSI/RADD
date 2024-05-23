@@ -1,10 +1,10 @@
 # Find chromatographic peaks with xcms and extract ones with a precursor mass
 # and at least one fragment matching a compound in the NPS database.
 
-NPS_GIT_ROOT = Sys.getenv("NPS_GIT_ROOT")
-MS_DATA_INPUT_DIR = Sys.getenv("MS_DATA_INPUT_DIR")
+# NPS_GIT_ROOT = Sys.getenv("NPS_GIT_ROOT")
+# MS_DATA_INPUT_DIR = Sys.getenv("MS_DATA_INPUT_DIR")
 
-setwd(NPS_GIT_ROOT)
+# setwd(NPS_GIT_ROOT)
 options(stringsAsFactors = FALSE)
 
 
@@ -19,13 +19,26 @@ library(tidyverse)
 library(magrittr)
 
 # load grid functions
-source("R/functions/submit_job.R")
-source("R/functions/write_sh.R")
-source("R/functions/detect_system.R")
+# source("R/functions/submit_job.R")
+# source("R/functions/write_sh.R")
+# source("R/functions/detect_system.R")
 
 # define input directory
 # input_dir = file.path(base_dir, "UDS", "converted") %>%
 #   gsub("scratch", "project", .)
+
+DATA_DIR = '/home/chris/ms_data/data/dataset1/'
+REFERENCE_DIR = "/home/chris/ms_data/data/reference"
+db1_filename = paste(REFERENCE_DIR, "NPS DATABASE-NOV2022.csv", sep = "/")
+db2_filename = paste(REFERENCE_DIR, "THERMO DB-NOV2022.csv", sep = "/")
+output_dir = "/scratch/cfjell/MS/output/dataset1/"
+
+
+REFERENCE_DIR = "/arc/project/st-cfjell-1/ms_data/Data/reference/"  # library of templates to match
+MS_DATA_INPUT_DIR = "/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/"
+output_dir = "/scratch/st-cfjell-1/output/ms_data/expedited_2023/"
+
+
 
 # list mzML files
 mzml_files = list.files(MS_DATA_INPUT_DIR, full.names = TRUE, pattern = "mzML")
@@ -46,7 +59,10 @@ grid = tidyr::crossing(
 )
 
 # define output directories
-output_dir = file.path(base_dir, "xcms")
+# output_dir = file.path(base_dir, "xcms")
+
+output_dir = '/scratch/st-cfjell-1/output/ms_data/rerun2024'
+
 if (!dir.exists(output_dir))
   dir.create(output_dir)
 output_dirnames = pmap_chr(grid, function(...) {
