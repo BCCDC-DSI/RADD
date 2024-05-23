@@ -1,5 +1,4 @@
 # library(tictoc)
-# library(tictoc)
 library(yaml)
 library(tidyverse)
 library(magrittr)
@@ -10,6 +9,7 @@ library(argparse)
 
 # Specify the path to your YAML config file
 config_file <- "config/config.yaml"
+config_file <- "/arc/project/st-ashapi01-1/RADD/config/config.yaml"
 
 # Read the YAML file
 config <- yaml::yaml.load_file(config_file)
@@ -236,6 +236,13 @@ if (length(args)==1) {
 }
 
 
+
+
+
+# ====================================================================
+# ============================ 2024-05-23 ============================
+# ====================================================================
+
 library(tidyverse)
 library(magrittr)
 library(xcms)
@@ -268,7 +275,7 @@ gotest <- function(mzml_file) {
 mzml_file = '/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/2023-2649BG01.mzML'
 mzml_file = '/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/2023-2664BG01_INJ001.mzML'
 
-database_dir = "/arc/project/st-cfjell-1/ms_data/Data/reference/",
+database_dir = "/arc/project/st-cfjell-1/ms_data/Data/reference/"
 output_dir = "/scratch/st-cfjell-1/output/ms_data/expedited_2023/"
 
 if (1) {
@@ -300,10 +307,15 @@ if (1) {
   dat = findChromPeaks(dat, param = cwp)
 
   # extract MS/MS spectra
-  spectra = chromPeakSpectra(dat, msLevel = 2L)
+  spectra_list = chromPeakSpectra(dat, msLevel = 2L, return.type = 'list')
+  spectra = chromPeakSpectra(dat, msLevel = 2L )
 
+
+
+
+  
   # save all MS/MS spectra detected in this file
-  spectra_df = data.frame(spectrum_name = names(spectra)) %>%
+  spectra_df = data.frame(spectrum_name = c('msLevel','rtime','scanIndex') ) %>%
     separate(spectrum_name, into = c('chrom_peak', 'file', 'spectrum'),
              sep = "\\.", remove = FALSE) %>%
     dplyr::select(-file)
