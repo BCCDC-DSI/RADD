@@ -320,16 +320,18 @@ if (1) {
 
   # extract MS/MS spectra
   spectra_list = chromPeakSpectra(dat, msLevel = 2L, return.type = 'list')
-  
+
+  if (0)
+  {
   spectra = chromPeakSpectra(dat, msLevel = 2L )
-
-
-
-
-
+  spectra_plain = chromPeakSpectra(dat)
+  names(spectra_list)
+  rownames(spectra_list)
+  spectra_list[[1L]]
+  }
   
   # save all MS/MS spectra detected in this file
-  spectra_df = data.frame(spectrum_name = c('msLevel','rtime','scanIndex') ) %>%
+  spectra_df = data.frame(spectrum_name = names(spectra_list) ) %>%
     separate(spectrum_name, into = c('chrom_peak', 'file', 'spectrum'),
              sep = "\\.", remove = FALSE) %>%
     dplyr::select(-file)
@@ -365,9 +367,8 @@ if (1) {
 
   
   results = map(seq_along(compounds), ~ {
-    compound = compounds[[.x]]
-    message("[", .x, "/", length(compounds), "] ", compound, " ...")
-
+                                    compound = compounds[[.x]]
+                                    message("[", .x, "/", length(compounds), "] ", compound, " ...")
     # get parent compound info to extract candidate spectra
     compound = filter(databases$NPS, Compound.Name == compound)
     parent = filter(compound, Workflow == 'TargetPeak')
