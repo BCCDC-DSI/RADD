@@ -269,8 +269,20 @@ gotest <- function(mzml_file) {
   database_dir = "/arc/project/st-cfjell-1/ms_data/Data/reference/"
   mzml_file = paste(data_dir, mzml_file, sep = "/")
   print(paste("mzml_file:", mzml_file))
+} 
 }
+
+s4ob2df <- function( s4o )
+{
+  nms = slotNames(s4o)
+  lst = lapply(  nms, function(nm) slot(s4o, nm) )
+  as.data.frame( setNames( lst,nms) )                  
 }
+s4ob2df( spectra )
+              
+
+
+               
 
 mzml_file = '/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/2023-2649BG01.mzML'
 mzml_file = '/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/2023-2664BG01_INJ001.mzML'
@@ -308,7 +320,9 @@ if (1) {
 
   # extract MS/MS spectra
   spectra_list = chromPeakSpectra(dat, msLevel = 2L, return.type = 'list')
+  
   spectra = chromPeakSpectra(dat, msLevel = 2L )
+
 
 
 
@@ -346,6 +360,10 @@ if (1) {
   compounds = unique(databases$NPS$Compound.Name) %>% na.omit()
   ## remove one compound already in the Thermo database
   compounds %<>% setdiff(c('', 'Norfluorodiazepam'))
+
+
+
+  
   results = map(seq_along(compounds), ~ {
     compound = compounds[[.x]]
     message("[", .x, "/", length(compounds), "] ", compound, " ...")
