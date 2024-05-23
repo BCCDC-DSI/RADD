@@ -14,31 +14,43 @@ from tqdm import tqdm
 # git_dir = os.path.expanduser("~/git/NPS-generation")
 git_dir = os.path.expanduser("/arc/project/st-ashapi01-1/RADD/code/NPS-generation")
 
+
+
 python_dir = git_dir + "/python"
 os.chdir(python_dir)
 sys.path.append(python_dir)
 
 # import functions
-from functions import clean_mols, remove_salts_solvents, read_smiles, \
-    NeutraliseCharges
+from functions import clean_mols, remove_salts_solvents, read_smiles,  NeutraliseCharges
+
 # import Vocabulary
 from datasets import Vocabulary
 
 # parse arguments
 try:
     input_file = sys.argv[1]
-    output_file = sys.argv[2]
+    
 except:
-    input_file =  ''
-    output_file = ''
+    input_file = '/arc/project/st-ashapi01-1/RADD/code/NPS-generation/data/chembl_28_2000.smi'
+     
+    
 
 
 # read SMILES
+    
 basename = os.path.basename(input_file)
-smiles = read_smiles(input_file)
+smiles0 = read_smiles(input_file)
 
+
+try:
+    output_file = sys.argv[2]
+except:
+    pref = basename.split('.')[0]
+    output_file = f'/scratch/st-ashapi01-1/RADD/temp/{pref}_cleaned.smi'
+    
 # remove duplicated SMILES
-smiles = np.unique(smiles)
+smiles = np.unique(smiles0)
+
 # record original count
 initial_count = len(smiles)
 print("parsing " + str(initial_count) + " unique SMILES")
