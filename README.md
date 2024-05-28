@@ -87,28 +87,9 @@ cd /arc/project/st-username-1/RADD
 
 | Tasks | Status |
 | :-- | :-- |
-| Sockeye: proposed new location: ```/arc/project/st-ashapi01-1/RADD``` | request sent on 2024-04-16 |
-| Sockeye: ask for symbolic links to: <br>```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML```<br>```/arc/project/st-cfjell-1/apptainer``` | not needed |
-| Access to Chris' GitRepo |  |
-| Understanding ```go.R``` | Lisa met with Chris 2024-04-26 |
-| Part 1: replicate analysis on data under ```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML``` | Steps 1 of 5 |
+| Part 1: replicate analysis on data under ```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML``` |
+| | Step A: data processing + feature extraction |
+| | Step B: figure generations for analyses  |
 | Part 2: generative model | TBD |
 
-<details>
-<summary>Part 1 </summary>
  
-- [ ] working script from start to end developed
-- [ ] working script tested
-- [ ] outputs available for part 2  (*.RData)
-- [ ] ...
-
-</details>
-
-
-
-<details>
-<summary>Part 2 </summary>
- 
-TBD
-
-</details>
