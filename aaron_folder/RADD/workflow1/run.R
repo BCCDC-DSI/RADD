@@ -1,29 +1,30 @@
 
-# dynamically parse arguments
-parser = ArgumentParser(prog = 'inner-consolidate-ms1-matches-xcms.R')
-grid = read.delim("sh/grids/consolidate-ms1-matches-xcms.txt")
-for (param_name in colnames(grid))
-  parser$add_argument(paste0('--', param_name),
-                      type = typeof(grid[[param_name]]))
-args = parser$parse_args()
-print(args)
-
 library(tidyverse)
 library(magrittr)
 library(xcms)
+options(stringsAsFactors = FALSE)
+library(argparse)
 
-source("R/functions/detect_system.R")
+args = parser$parse_args()
+print(args)
 
-# define input directory
-input_dir = file.path(base_dir, "UDS", "converted") %>%
-  gsub("scratch", "project", .)
+output_dir = "/scratch/st-ashapi01-1/ms_data/expedited_2023/"
+database_dir = "/arc/project/st-cfjell-1/ms_data/Data/reference/"
+input_dir = "/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/"
+
 
 # list mzML files
-mzml_files = list.files(input_dir, full.names = TRUE, pattern = "mzML") %>% 
+if (1) {
+  mzml_files = list.files(input_dir, full.names = TRUE, pattern = "mzML") 
+} else {
+  mzml_files = list.files(input_dir, full.names = TRUE, pattern = "mzML") %>% 
   # drop calibration, mix, QC files
   extract(!grepl('^Cal|^MeOH|^QC|^Mix', basename(.))) %>% 
   # keep only E/R 
   extract(grepl('^E|^R', basename(.)))
+}
+
+##### <--- LT ended here today 2024-05-28
 
 # get peak-picked files
 mzml_filenames = gsub("\\.mzML$", "", basename(mzml_files))
@@ -31,7 +32,7 @@ rds_files = file.path(args$output_dir, paste0(mzml_filenames, '.rds'))
 stopifnot(all(file.exists(rds_files)))
 
 # read all files
-dats = map(rds_files, readRDS) %>% setNames(mzml_filenames)
+dats = map(rds_files, readRDS) %>% setNames(mzml_files )
 # extract spectra
 chromPeakSpectra = map(dats, 'chromPeakSpectra') %>% 
   bind_rows(.id = 'file')
