@@ -2,8 +2,8 @@
 
 
 Notes:
-- Sockeye [only accessible by Afraz]
-- ComputeCanada [only accessible by Lisa]
+- Sockeye: accessible by Afraz + Lisa
+- ComputeCanada: accessible by Lisa
  
 ## One time setup 
 
@@ -39,9 +39,10 @@ cd /arc/project/st-username-1/RADD
  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
  bash Miniconda3-latest-Linux-x86_64.sh
 
- conda create --name radd
- conda activate radd
- conda install R; conda install r-tidyverse r-magrittr r-argparse; conda install -c bioconda bioconductor-xcms
+ $HOME/miniconda3/bin/conda create --prefix nps-screen;
+ $HOME/miniconda3/bin/conda activate nps-screen;
+ $HOME/miniconda3/bin/conda install R r-tidyverse r-magrittr r-argparse;
+ $HOME/miniconda3/bin/conda install -c bioconda bioconductor-xcms
  ```
  
  
@@ -206,28 +207,9 @@ The script is working perfectly fine and you can run all the tests.
 
 | Tasks | Status |
 | :-- | :-- |
-| Sockeye: proposed new location: ```/arc/project/st-ashapi01-1/RADD``` | request sent on 2024-04-16 |
-| Sockeye: ask for symbolic links to: <br>```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML```<br>```/arc/project/st-cfjell-1/apptainer``` | not needed |
-| Access to Chris' GitRepo |  |
-| Understanding ```go.R``` | Lisa met with Chris 2024-04-26 |
-| Part 1: replicate analysis on data under ```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML``` | Steps 1 of 5 |
+| Part 1: replicate analysis on data under ```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML``` |
+| | Step A: data processing + feature extraction |
+| | Step B: figure generations for analyses  |
 | Part 2: generative model | TBD |
 
-<details>
-<summary>Part 1 </summary>
  
-- [ ] working script from start to end developed
-- [ ] working script tested
-- [ ] outputs available for part 2  (*.RData)
-- [ ] ...
-
-</details>
-
-
-
-<details>
-<summary>Part 2 </summary>
- 
-TBD
-
-</details>

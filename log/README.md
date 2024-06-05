@@ -1,4 +1,12 @@
 
+# 2024-05-25
+
+[Ongoing slides](https://docs.google.com/presentation/d/1EoPfQdC32cnRHPE95FKA8puVm2C3zmvNykvNYOYzaO8/)
+
+
+
+
+
 # 2024-04-25
 
 ## Interactive session 
@@ -54,6 +62,14 @@ go( "/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/2023-2649BG01.mzML"  )
   NULL
   ```
 
+## Old Team notes (before 2024-04-25)
+
+| Tasks | Status |
+| :-- | :-- |
+| Sockeye: proposed new location: ```/arc/project/st-ashapi01-1/RADD``` | request sent on 2024-04-16 |
+| Sockeye: ask for symbolic links to: <br>```/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML```<br>```/arc/project/st-cfjell-1/apptainer``` | not needed |
+| Access to Chris' GitRepo |  |
+| Understanding ```go.R``` | Lisa met with Chris 2024-04-26 |
 
 
 
