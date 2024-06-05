@@ -7,7 +7,7 @@
 
 ## Fields in ```Prediction Data.csv``` (n=2329)
 | Compound | DrugClass| InChIKey| InChIKeyShort | SMILES | logD | logP | nO | nC | 
-| :-- | 
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
 | (Iso)butyryl-F-fentanyl N-benzyl analogue  |Opioids  | XNQGKYHSTDKIKG-UHFFFAOYSA-N  | XNQGKYHSTDKIKG  | 
  (C1=CC=CC=C1)N1CCC(CC1)N(C(C(C)C)=O)C1=CC=C(C=C1)F  | 0.717182  | 4.4793  | 1  | 22 | 
 
