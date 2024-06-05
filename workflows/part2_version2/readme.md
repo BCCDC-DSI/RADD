@@ -9,7 +9,7 @@
 ## ```Training_Database_with_fbs_rt.csv``` (last line at 10059)
 
 | Compound Name	| Workflow| 	Associated Target Peak | 	MS Order	| Precursor m/z	|  Product m/z| 	m/z	| Height Threshold	| Area Threshold |  Collision Energy	| Modification	| Lens | 	Energy Ramp | 	Ion Coelution| 	Ratio Window	| Target Ratio	| Window Type	| PeakPolarity	| Adduct	| Charge State	| Retention Time| 	Retention Time Window	| Integration Strategy| 	Compound	|  PTC  Confirmed RT| 
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
 ## Other data
 
 Below are in ```rt-predictor folder```
