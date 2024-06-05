@@ -13,7 +13,7 @@ Compound Name	| Workflow | Associated Target Peak | 	MS Order	| Precursor m/z	| 
 
 
 
-## Other data in the ```rt-predictor folder```
+## Other data in the ```rt-predictor``` folder
 
 - Fields in ```Prediction Data.csv``` (n=2329)
  
