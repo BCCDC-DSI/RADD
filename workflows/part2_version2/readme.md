@@ -3,19 +3,17 @@
 
 - Courtesy of Dan Pasin (nps-rt-main) and some updated libraries 
 
-> Note that for training the retention time predictor, we only want to use retention times that have been confirmed at PTC. Please use ```Training_Database_with_fbs_rt.csv``` column Y (PTC Confirmed RT) only. You can ignore column U (Retention Time)
+## Libraries
 
-
-## ```Training_Database_with_fbs_rt.csv``` (last line at 10059)
-
+- ```Training_Database_with_fbs_rt.csv``` (last line at 10059)
 
 Compound Name	| Workflow | Associated Target Peak | 	MS Order	| Precursor m/z	|  Product m/z| 	m/z	| Height Threshold	| Area Threshold |  Collision Energy	| Modification	| Lens | 	Energy Ramp | 	Ion Coelution| 	Ratio Window	| Target Ratio	| Window Type | PeakPolarity	| Adduct	| Charge State	| ~~Retention Time~~ | 	Retention Time Window	| Integration Strategy| 	Compound	| **PTC Confirmed RT**
 
+> Note that for training the retention time predictor, we only want to use retention times that have been confirmed at PTC. Please use ```Training_Database_with_fbs_rt.csv``` column Y (PTC Confirmed RT) only. You can ignore column U (Retention Time)
 
 
-## Other data
 
-Below are in ```rt-predictor folder```
+## Other data in the ```rt-predictor folder```
 
 - Fields in ```Prediction Data.csv``` (n=2329)
  
