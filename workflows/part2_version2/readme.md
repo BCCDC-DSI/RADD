@@ -1,6 +1,7 @@
 
 # Retention time predictor 
 
+- Shared with Chris/ Afraz/ Lisa 2024-06-01
 - Courtesy of Dan Pasin (nps-rt-main) and some updated libraries 
 
 ## Libraries
