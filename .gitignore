@@ -50,3 +50,8 @@ rsconnect/
 
 # Data folder
 Data/
+
+# Excel files
+*.csv
+*.xls
+*.xlsx
