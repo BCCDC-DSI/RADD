@@ -10,6 +10,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import pickle
+from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.text import Tokenizer
 
 def compound_name_to_smiles(compound):
     """
@@ -102,3 +104,37 @@ def load_smiles_dict(pickle_filename):
             return pickle.load(f)
     else:
         return {}
+
+class Smiles2Vec:
+    def __init__(self):
+        self.tokenizer = Tokenizer(char_level=True)
+        self.vocab = [
+            '(', ')', '-', '.', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', '@', 'B', 'C', 'F', 'H', 'I', 'N', 
+            'O', 'P', 'S', '[', ']', 'a', 'b', 'c', 'd', 'e', 'g', 'h', 'i', 'l', 'n', 'o', 'p', 'r', 's', 't', 'u'
+        ]
+        self.tokenizer.fit_on_texts(self.vocab)
+    
+    def sentence_to_vec(self, sentence):
+        # Convert a sentence into a list of character indices
+        return self.tokenizer.texts_to_sequences([sentence])[0]
+    
+def encode_smiles(smiles_list):
+    """
+    Encode a list of SMILES strings into feature vectors using a custom Smiles2Vec class.
+
+    Args:
+    smiles_list (list of str): List of SMILES strings.
+
+    Returns:
+    np.ndarray: Feature matrix with SMILES encoded into vectors.
+    """
+    # Initialize the Smiles2Vec encoder
+    s2v = Smiles2Vec()
+
+    # Convert the list of SMILES strings into feature vectors
+    smiles_features = [s2v.sentence_to_vec(smiles) for smiles in smiles_list]
+
+    # Pad sequences to ensure uniform length
+    smiles_features_padded = pad_sequences(smiles_features, maxlen=50, padding='post')
+
+    return np.array(smiles_features_padded)

@@ -30,16 +30,17 @@ import tensorflow as tf
 with open('config/config.yaml') as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
-with open('config/ml_config.yaml') as f:
-    ml_config = yaml.load(f, Loader=yaml.FullLoader)
-
-global predictor_name
-predictor_name = config['predictor_name']
-date_name = config['date_name']
-LHA_ID = config['LHA_ID']
-pipeline_results_dir = config['pipeline_results_dir']
-
-model_names = ml_config['model_names']
+# Load configurations
+model_index = config['model_index']
+model_y = config['model_y']
+working_dir = config['working_dir']
+raw_data_dir = config['raw_data_dir']
+linking_dir = config['linking_dir']
+raw_data_filename = config['raw_data_filename']
+linking_filename = config['linking_filename']
+smiles_dict_filename = config['smiles_dict_filename']
+output_dir = config['output_dir']
+output_filename = config['output_filename']
 
 def config_logger(output_dir):
     logger = logging.getLogger("RADD")
@@ -84,10 +85,10 @@ def format_data(df):
         NumPy arrays of features and predictor
         
     """
-    y = df[predictor_name]
+    y = df[model_y]
     y = y.to_numpy()
     col_names = df.columns.tolist()
-    col_names.remove(predictor_name)
+    col_names.remove(model_y)
     X = df[col_names]
 
     return X,y
@@ -102,41 +103,13 @@ def main():
 
     # Load the data (We ignore the date columns - Assume ORDERED)
     all_data = pd.read_csv(args.data, index_col=False)
-
-    # Create the day features
-    logger.info("Making day of the week and holiday features")
-    all_data = utils.create_day_features(all_data, date_name)
-
-    logger.info("Missingness Analysis...")
-    missingness_df = utils.show_missing(all_data)
-    logger.info(missingness_df.head())
-    if missingness_df[missingness_df['missing'] > 0] is not None:
-        logger.info("There is some missingess, Imputation will be implemented at preprocessing")
-        warnings.warn('Missing values detected, consider using a complete dataset otherwise Imputation will take place')
-    # train test split (Time series version)
     split = math.floor(float(args.train_size)*len(all_data)) # default 80% train
     logger.info("Splitting the data into a " + str(float(args.train_size)*100) + ":" + str(1 - float(args.train_size)*100) + " split")
     train_data = all_data[:split]
     test_data  = all_data[split:]
-    rolling_vec = utils.rolling_avg_regressor(all_data)
-    rolling_y_train = rolling_vec[:split]
-    rolling_y_test = rolling_vec[split:]
-
     # Keep the Test and Train DataFrames (for plots)
     train_data_raw = train_data.copy()
     test_data_raw = test_data.copy()
-
-    # Retain Dates and LHA IDs as separate variables for plots
-    train_dates = train_data[date_name]
-    test_dates = test_data[date_name]
-    train_dates = pd.to_datetime(train_dates)
-    test_dates = pd.to_datetime(test_dates)
-    train_ids = train_data[LHA_ID]
-    test_ids = test_data[LHA_ID]
-    
-    # Remove them from the training and test data
-    train_data.drop(columns=[date_name, LHA_ID], inplace=True)
-    test_data.drop(columns=[date_name, LHA_ID], inplace=True)
     
     # print some stats on data
     logger.info("Total samples: {}".format(len(all_data)))
@@ -149,31 +122,14 @@ def main():
 
     # Prepare columns
     features = X_train.columns.to_list()
-    df_numerical_features = X_train.select_dtypes(include='number')
-    df_categorical_features = X_train.select_dtypes(include='object')
 
-    # preprocess
-    features = X_train.columns.to_list()
-    numerical_features = df_numerical_features.columns.to_list()
-    categorical_features = df_categorical_features.columns.to_list()
     processor = train.fit_processor(X_train[features],numerical_features, categorical_features, args.output_dir)
     norm_X_train = processor.transform(X_train[features])
     norm_X_test = processor.transform(X_test[features])
-
-    # Prediction Preprocess
-    y_train = np.array(y_train).reshape(-1,1)
-    y_test = np.array(y_test).reshape(-1,1)
-    prediction_preprocessor = train.scale_prediction(y_train, args.output_dir)
-    norm_y_train = prediction_preprocessor.transform(y_train)
-    norm_y_test = prediction_preprocessor.transform(y_test)
-
     # Retain for SHAPs
     features_processed = processor.get_feature_names_out()
 
     # Train all models
-    # UNRESHAPE THE DATA SO IT WORKS
-    norm_y_train = norm_y_train.ravel()
-    norm_y_test = norm_y_test.ravel()
      # Train all models
     all_models = []
     if args.load_models:
@@ -217,14 +173,6 @@ def main():
         all_models = [catboost, lasso, lgbm, neural_net, rf, xgboost]
 
     ml_dict =  dict(zip(model_names, all_models))
-
-    # Load Census Info for testing models
-    proportion_dict, description_dict = census.load_census_info()
-    # Test all Models
-    test.summary_stats_models(ml_dict, train_data_raw, test_data_raw, norm_X_train, norm_y_train, norm_X_test, norm_y_test, rolling_y_test, args.output_dir)
-    #test.shap_summary_models(ml_dict, features, features_processed, norm_X_train, norm_y_train, proportion_dict, description_dict, args.output_dir, 'train')
-    test.shap_summary_models(ml_dict, features, features_processed, norm_X_test, norm_y_test, proportion_dict, description_dict, args.output_dir)
-    
 
 if __name__ == "__main__":
     main()
