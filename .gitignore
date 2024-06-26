@@ -58,3 +58,9 @@ Data/
 
 # Pycache
 __pycache__
+
+# Jupyter
+.ipynb_checkpoints
+
+# Pickle files
+*.pkl

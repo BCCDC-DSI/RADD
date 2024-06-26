@@ -7,6 +7,11 @@ def create_output_dirs(output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
+def clean_data(data, compound_col='Compound'):
+    # Clean the 'Compound' column by removing special characters
+    data['Stripped Compound Name'] = data[compound_col].apply(lambda x: re.sub(r'[^A-Za-z0-9 ]+', '', str(x)))
+    return data
+
 def load_and_clean_data(file_path):
     """
     Format the File correctly
@@ -34,10 +39,8 @@ def load_and_clean_data(file_path):
 
     # Read the data from the header line onward
     data = pd.read_csv(file_path, skiprows=header_line)
-
-    # Clean the 'Compound' column by removing special characters
-    data['Compound'] = data['Compound'].apply(lambda x: re.sub(r'[^A-Za-z0-9 ]+', '', str(x)))
-    data.drop(columns=['Compound Name'], inplace=True)
+    data = clean_data(data)
+    
     # Move the 'Compound' column to the first position
     columns = ['Compound'] + [col for col in data.columns if col != 'Compound']
     data = data[columns]

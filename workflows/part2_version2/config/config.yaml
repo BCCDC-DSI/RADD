@@ -3,7 +3,7 @@ descriptors : ['logD', 'logP', 'nO', 'nC']
 
 # Variable Names
 model_index : 'Compound' # Sample ID
-model_y : 'RT'
+model_y : 'PTC Confirmed RT'
 model_ohe : ['LAB', 'DrugClass']
 # Column Names
 lab_column_name : 'LAB'
@@ -11,8 +11,11 @@ lab_column_name : 'LAB'
 ## Filepaths
 working_dir : 'O:/BCCDC/Groups/Analytics/DSI/RnD/p10_RADD_consult/code/RADD/workflows/part2_version2'
 raw_data_dir : 'libraries'
+linking_dir : 'libraries'
 output_dir : 'data'
 
 ## Filenames
 raw_data_filename : 'Training_Database_with_fbs_rt.csv'
+linking_filename : 'Modeling Data.xlsx'
+smiles_dict_filename : 'smiles_dict.pkl'
 output_filename : 'training_data_bccdc.csv'
