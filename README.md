@@ -3,7 +3,14 @@
 
 Notes:
 - Sockeye: accessible by Afraz + Lisa
+ - 3-day out of service   2024-06-25 to 2024-06-28 (second time since we have access)
 - ComputeCanada: accessible by Lisa
+ ```
+  Graham has several types of GPUs, some of which are available with less wait:
+  320 p100 2/node, 12GB, original
+   70 v100 8/node, 16GB, newer, about 50% faster than P100 and with tensor cores
+  144 t4   4/node, 16GB, newer, about half a V100, for compute & AI except much slower FP64
+ ```
  
 ## One time setup 
 
