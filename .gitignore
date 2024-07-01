@@ -64,3 +64,9 @@ __pycache__
 
 # Pickle files
 *.pkl
+
+# Packages
+pkgs.txt
+
+# Catboost
+catboost_info
