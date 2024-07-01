@@ -23,6 +23,7 @@ from sklearn.model_selection import (
     cross_validate,
     train_test_split,
 )
+from sklearn.model_selection import KFold
 import time
 import create_neural_net
 import yaml 
@@ -40,9 +41,6 @@ from keras.models import model_from_json
 import json
 
 logger = logging.getLogger('RADD')
-
-with open('config/ml_config.yml') as f:
-    ml_config = yaml.load(f, Loader=yaml.FullLoader)
 
 
 def scale_prediction(y_train, output_dir):
@@ -66,75 +64,183 @@ def scale_prediction(y_train, output_dir):
         pickle.dump(preprocessor, f)
     return preprocessor
 
-def fit_processor(X_train, numeric_features, categorical_features, output_dir):
+def create_char_to_int(smiles):
+    """Create a character-to-integer mapping based on the input SMILES strings."""
+    unique_chars = set(''.join(smiles))
+    char_to_int = {char: i for i, char in enumerate(unique_chars)}
+    char_to_int['!'] = len(char_to_int)  # Start character
+    char_to_int['E'] = len(char_to_int)  # End character
+    char_to_int['UNK'] = len(char_to_int)  # Unknown character
+    return char_to_int
+
+def vectorize_smiles(smiles):
     """
-    Applies Simple Imputer to Categorical Features
-    Applies One Hot Encoding to Categorical Features
-    Applies Quantile Scaling to Numeric Features
-    Returns and writes pickle file of the complete preprocessor
+    Vectorize a list of SMILES strings into one-hot encoded representations.
+
+    This function converts a list of SMILES strings into a three-dimensional
+    one-hot encoded array, suitable for input into neural network models. It
+    automatically determines the maximum SMILES length in the dataset and adds
+    two additional positions for start ('!') and end ('E') characters.
 
     Parameters
     ----------
-    X_train : numpy
-        Training Data in NumPy format
-    numeric_features : list[string]
-        List of Numeric Features
-    categorical_features: list[string]
-        List of Categorical Features
-    output_dir: string
-        Output directory to write the preprocessor to
+    smiles : list of str
+        List of SMILES strings to be vectorized.
+
+    Returns
+    -------
+    tuple of np.ndarray
+        A tuple containing two numpy arrays:
+        - The first array is the one-hot encoded input sequences, excluding the end character.
+        - The second array is the one-hot encoded output sequences, excluding the start character.
+        
+    Examples
+    --------
+    >>> smiles = ["CCO", "NCC", "CCCCCCCCCCC"]
+    >>> X, Y = vectorize_smiles(smiles)
+    >>> X.shape
+    (3, 13, 27)
+    >>> Y.shape
+    (3, 13, 27)
+    Note: for this pipeline Y is a return value we do not utilise.
+    """
+    char_to_int = create_char_to_int(smiles)
+
+    # Determine the maximum SMILES length
+    max_smiles_length = max(len(smile) for smile in smiles)
+    embed_length = max_smiles_length + 2  # Add 2 for start ('!') and end ('E') characters
+    charset_size = len(char_to_int)
+    
+    def vectorize(smiles):
+        one_hot = np.zeros((len(smiles), embed_length, charset_size), dtype=np.int8)
+        for i, smile in enumerate(smiles):
+            # encode the start character
+            one_hot[i, 0, char_to_int["!"]] = 1
+            # encode the rest of the characters
+            for j, c in enumerate(smile):
+                if c in char_to_int:
+                    one_hot[i, j + 1, char_to_int[c]] = 1
+                else:
+                    one_hot[i, j + 1, char_to_int['UNK']] = 1
+            # encode end character
+            one_hot[i, len(smile) + 1, char_to_int["E"]] = 1
+        # return two, one for input and the other for output
+        return one_hot[:, 0:-1, :], one_hot[:, 1:, :]
+
+    return vectorize(smiles)
+
+def flatten_and_create_feature_names(X_vectorized):
+    """
+    Flatten the 3D one-hot encoded array into a 2D array and create feature names.
+    
+    Parameters
+    ----------
+    X_vectorized : np.ndarray
+        3D array of shape (samples, max_length, charset_size)
     
     Returns
     -------
-    preprocessor : sklearn.Preprocessor
-        sklearn preprocessor fit on the training set
+    pd.DataFrame
+        2D DataFrame with flattened features and meaningful names
     """
+    num_samples, max_length, charset_size = X_vectorized.shape
+    
+    # Flatten the 3D array into a 2D array
+    X_flattened = X_vectorized.reshape(num_samples, -1)
+    
+    # Create feature names
+    feature_names = [f"pos_{i}_char_{j}" for i in range(max_length) for j in range(charset_size)]
+    
+    # Create DataFrame with feature names
+    df_flattened = pd.DataFrame(X_flattened, columns=feature_names)
+    
+    return df_flattened
+
+def combine_with_additional_features(df_flattened, additional_features):
+    """
+    Combine the flattened DataFrame with additional features.
+    
+    Parameters
+    ----------
+    df_flattened : pd.DataFrame
+        DataFrame with flattened features
+    additional_features : pd.DataFrame
+        DataFrame with additional numeric or categorical features
+    
+    Returns
+    -------
+    pd.DataFrame
+        Combined DataFrame
+    """
+    combined_df = pd.concat([df_flattened, additional_features], axis=1)
+    return combined_df
+
+def preprocess_combined_df(combined_df):
+    """
+    Preprocess the combined DataFrame.
+    
+    Parameters
+    ----------
+    combined_df : pd.DataFrame
+        Combined DataFrame with flattened SMILES features and additional features    
+    Returns
+    -------
+    np.ndarray
+        Preprocessed array
+    ColumnTransformer
+        Fitted preprocessor
+    """
+    # Dynamically identify numeric and categorical features
+    numeric_features = combined_df.select_dtypes(include=[np.number]).columns.tolist()
+    categorical_features = combined_df.select_dtypes(include=['object']).columns.tolist()
+    
     pipe_num = Pipeline([
         ('impute', SimpleImputer(strategy='constant', fill_value=0)),
-        ('scaler',  MinMaxScaler(feature_range=(-1, 1)))
+        ('scaler', StandardScaler())
     ])
     pipe_cat = Pipeline([
-        ('ohe', OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')),
-        ('impute', SimpleImputer(strategy='constant', fill_value=0))
-        
-    ]) 
+        ('impute', SimpleImputer(strategy='most_frequent')),
+        ('ohe', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
+    ])
     preprocessor = ColumnTransformer([
         ('num', pipe_num, numeric_features),
         ('cat', pipe_cat, categorical_features)
-    ])
-    logger.info("Preprocessing X_train")
-    norm_X_train = preprocessor.fit(X_train)
-    with open(os.path.join(output_dir, 'processor.pkl'),'wb') as f:
-        pickle.dump(preprocessor, f)
-    return preprocessor
+    ], remainder='passthrough')
+    
+    X_preprocessed = preprocessor.fit_transform(combined_df)
+    
+    return X_preprocessed, preprocessor
 
-def time_series_cross_val(model, X_train, y_train, param_search):
+def cross_val(model, X_train, y_train, param_search):
     """
-    Performs Time Series Split Cross Validation on Training Data (set to 10 splits)
+    Performs k-fold cross validation
     
     Parameters
     ----------
     model : sklearn.Model
         Machine Learning model (Linear or Tree based)
-    X_train : numpy
+    X_train : numpy.ndarray
         Training Data
-    y_train : numpy
+    y_train : numpy.ndarray
         Training Predictions
-    param_search : dict{string: list[string] or string: list[int]}
+    param_search : dict
         Grid Search parameters
     
     Returns
     -------
     best_model : sklearn.Model
-        Best model by maximising objective function on validation set
+        Best model by maximizing objective function on validation set
     """
-
-    tscv = TimeSeriesSplit(n_splits=10)
-    bscv = blocked_time_series_split.BlockingTimeSeriesSplit(n_splits=10, margins=14)
-    gsearch = GridSearchCV(estimator=model, cv=bscv,
-                            param_grid=param_search, n_jobs = -1)
+    
+    # Define the k-fold cross-validation strategy
+    kf = KFold(n_splits=10, shuffle=True, random_state=42)
+    
+    # Initialize GridSearchCV with the specified model, cross-validation, and parameter grid
+    gsearch = GridSearchCV(estimator=model, cv=kf, param_grid=param_search, n_jobs=-1)
+    
+    # Fit GridSearchCV to find the best model based on the given parameters
     best_model = gsearch.fit(X_train, y_train)
-
+    
     return best_model
 
 def train_all_models(X_train, y_train, output_dir):
@@ -169,7 +275,7 @@ def train_all_models(X_train, y_train, output_dir):
         'alpha' : [0.001, 0.01, 0.1],
         'max_iter': [500, 1000, 2000]
     }
-    lasso = time_series_cross_val(linear_model.Lasso(), X_train, y_train, lasso_params)
+    lasso = cross_val(linear_model.Lasso(), X_train, y_train, lasso_params)
     with open(os.path.join(output_dir, 'models/lasso_model.pkl'), 'wb') as f:
         pickle.dump(lasso, f)
 
@@ -180,7 +286,7 @@ def train_all_models(X_train, y_train, output_dir):
         'n_estimators': [4, 16, 64],
         'min_samples_split': [8, 16, 32]
     }
-    rf = time_series_cross_val(RandomForestRegressor(), X_train, y_train, rf_params)
+    rf = cross_val(RandomForestRegressor(), X_train, y_train, rf_params)
     with open(os.path.join(output_dir, 'models/rf_model.pkl'), 'wb') as f:
         pickle.dump(rf, f)
 
@@ -191,7 +297,7 @@ def train_all_models(X_train, y_train, output_dir):
          'max_depth': [2,4,8],
          'min_data_in_leaf': [2,4,8,16,32]
     }
-    lgbm = time_series_cross_val(lgb.LGBMRegressor(), X_train, y_train, lgbm_params)
+    lgbm = cross_val(lgb.LGBMRegressor(), X_train, y_train, lgbm_params)
     with open(os.path.join(output_dir, 'models/lgbm_model.pkl'), 'wb') as f:
         pickle.dump(lgbm, f)
 
@@ -206,7 +312,7 @@ def train_all_models(X_train, y_train, output_dir):
         'batch_size' : [16, 32, 64]
     }
 
-    neural_net = time_series_cross_val(base_neural_net, X_train, y_train, neural_net_params)
+    neural_net = cross_val(base_neural_net, X_train, y_train, neural_net_params)
     neural_net_json = neural_net.best_estimator_.model.to_json() 
     with open(os.path.join(output_dir, 'models/neural_net_model.json'), 'w') as f:
         f.write(neural_net_json)
@@ -224,7 +330,7 @@ def train_all_models(X_train, y_train, output_dir):
         'border_count':[25, 50, 75],
         'thread_count':[4]
         }
-    catboost = time_series_cross_val(CatBoostRegressor(), X_train, y_train, catboost_params)
+    catboost = cross_val(CatBoostRegressor(), X_train, y_train, catboost_params)
     with open(os.path.join(output_dir, 'models/catboost_model.pkl'), 'wb') as f:
         pickle.dump(catboost, f)
 
@@ -242,7 +348,7 @@ def train_all_models(X_train, y_train, output_dir):
         # Other parameters
         'objective':['reg:squarederror']
     }
-    xgboost = time_series_cross_val(XGBRegressor(), X_train, y_train, xgboost_params)
+    xgboost = cross_val(XGBRegressor(), X_train, y_train, xgboost_params)
     with open(os.path.join(output_dir, 'models/xgboost_model.pkl'), 'wb') as f:
         pickle.dump(xgboost, f)
 

@@ -45,3 +45,28 @@ def load_and_clean_data(file_path):
     columns = ['Compound'] + [col for col in data.columns if col != 'Compound']
     data = data[columns]
     return data
+
+def create_long_metrics_df(models_list, metrics_list, metric_col_name, dataset_name):
+    """
+    Create a Long DataFrame for the Metrics of the pipeline
+
+    Parameters
+    ----------
+        models_list : List
+            The models to add to a models column
+        metrics_list : List
+            The metrics to add to a metrics column
+        dataset_name : String
+            The Dataset the metrics were made on (Train/Test)
+    
+    Returns
+    -------
+        df : DataFrame
+            Long Format DataFrame
+    """
+    df = pd.DataFrame(columns=['Model', metric_col_name])
+    df['Model'] = models_list
+    df[metric_col_name] = metrics_list
+    df['Dataset'] = dataset_name
+
+    return df

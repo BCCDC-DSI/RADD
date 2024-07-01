@@ -30,17 +30,26 @@ import tensorflow as tf
 with open('config/config.yaml') as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
-# Load configurations
+## Load configurations
 model_index = config['model_index']
 model_y = config['model_y']
+model_X = config['model_X']
+
+# Directories
 working_dir = config['working_dir']
 raw_data_dir = config['raw_data_dir']
 linking_dir = config['linking_dir']
+output_dir = config['output_dir']
+default_output_dir = config['default_output_dir']
+
+# Filenames
 raw_data_filename = config['raw_data_filename']
 linking_filename = config['linking_filename']
 smiles_dict_filename = config['smiles_dict_filename']
-output_dir = config['output_dir']
 output_filename = config['output_filename']
+
+# ML Pipeline
+model_names = config['model_names']
 
 def config_logger(output_dir):
     logger = logging.getLogger("RADD")
@@ -87,10 +96,7 @@ def format_data(df):
     """
     y = df[model_y]
     y = y.to_numpy()
-    col_names = df.columns.tolist()
-    col_names.remove(model_y)
-    X = df[col_names]
-
+    X = df[[model_X]]
     return X,y
 
 def main():
@@ -101,12 +107,15 @@ def main():
     # preprocess and split into train and test
     logger.info("Loading the data...")
 
-    # Load the data (We ignore the date columns - Assume ORDERED)
+    # Load the data
     all_data = pd.read_csv(args.data, index_col=False)
     split = math.floor(float(args.train_size)*len(all_data)) # default 80% train
-    logger.info("Splitting the data into a " + str(float(args.train_size)*100) + ":" + str(1 - float(args.train_size)*100) + " split")
+    logger.info(f'Splitting the data into a {float(args.train_size)*100}:{100-float(args.train_size)*100} split')
+
+    # Train and Test data
     train_data = all_data[:split]
     test_data  = all_data[split:]
+
     # Keep the Test and Train DataFrames (for plots)
     train_data_raw = train_data.copy()
     test_data_raw = test_data.copy()
@@ -123,9 +132,23 @@ def main():
     # Prepare columns
     features = X_train.columns.to_list()
 
-    processor = train.fit_processor(X_train[features],numerical_features, categorical_features, args.output_dir)
-    norm_X_train = processor.transform(X_train[features])
-    norm_X_test = processor.transform(X_test[features])
+    # Vectorize SMILES data in the DataFrame
+    X_train_vectorized, _ = train.vectorize_smiles(X_train)
+    X_test_vectorized, _ = train.vectorize_smiles(X_test)
+    
+    # Flatten and create feature names
+    df_train_flattened = train.flatten_and_create_feature_names(X_train_vectorized)
+    df_test_flattened = train.flatten_and_create_feature_names(X_test_vectorized)
+    
+    # Combine with additional features (assuming no additional features in this example)
+    combined_df_train = train.combine_with_additional_features(df_train_flattened, None)
+    combined_df_test = train.combine_with_additional_features(df_test_flattened, None)
+    
+    # Preprocess the training data
+    norm_X_train, processor = train.preprocess_combined_df(combined_df_train)
+    # Transform the test data using the fitted processor
+    norm_X_test = processor.transform(combined_df_test)
+
     # Retain for SHAPs
     features_processed = processor.get_feature_names_out()
 
@@ -149,7 +172,7 @@ def main():
         # Ensure correct ordering
         if not all_models:
             logger.info("The chosen directory does not have models, using latest trained models. See config file.")
-            for root, dirs, files in os.walk(os.path.join(pipeline_results_dir, default_output_dir, 'models')):
+            for root, dirs, files in os.walk(os.path.join(default_output_dir, 'models')):
                 for file in files:
                     if file.endswith('.json'):
                         json_file = open(root + '/' + file, 'r')
@@ -169,10 +192,12 @@ def main():
                 i.load_weights(neural_net_weights)
 
     else:
-        catboost, lasso, lgbm, neural_net,  rf, xgboost = train.train_all_models(norm_X_train, norm_y_train, args.output_dir)
+        catboost, lasso, lgbm, neural_net,  rf, xgboost = train.train_all_models(norm_X_train, y_train, args.output_dir)
         all_models = [catboost, lasso, lgbm, neural_net, rf, xgboost]
 
     ml_dict =  dict(zip(model_names, all_models))
+    test.summary_stats_models(ml_dict, train_data_raw, test_data_raw, norm_X_train, y_train, norm_X_test, y_test, args.output_dir)
+    test.shap_summary_models(ml_dict, features, features_processed, norm_X_test, y_test, args.output_dir)
 
 if __name__ == "__main__":
     main()
