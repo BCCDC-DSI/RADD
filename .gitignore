@@ -59,14 +59,20 @@ Data/
 # Pycache
 __pycache__
 
-# Jupyter
-.ipynb_checkpoints
+# Images
+*.png
 
-# Pickle files
+# all pickle files
 *.pkl
 
-# Packages
-pkgs.txt
+# Catboost info
+catboost_info/
 
-# Catboost
-catboost_info
+# Neural Network weights
+*.h5
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Any test folders
+test*
