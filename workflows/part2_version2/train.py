@@ -73,6 +73,45 @@ def create_char_to_int(smiles):
     char_to_int['UNK'] = len(char_to_int)  # Unknown character
     return char_to_int
 
+class SMILESVectorizer:
+    def __init__(self):
+        self.char_to_int = None
+        self.max_smiles_length = None
+        self.charset_size = None
+
+    def fit(self, smiles):
+        self.char_to_int = self.create_char_to_int(smiles)
+        self.max_smiles_length = max(len(smile) for smile in smiles)
+        self.charset_size = len(self.char_to_int)
+        print(f"Charset Size: {self.charset_size}")
+        print(f"Char to Int Mapping: {self.char_to_int}")
+        return self
+
+    def transform(self, smiles):
+        embed_length = self.max_smiles_length + 2  # Add 2 for start ('!') and end ('E') characters
+        one_hot = np.zeros((len(smiles), embed_length, self.charset_size), dtype=np.int8)
+        for i, smile in enumerate(smiles):
+            # encode the start character
+            one_hot[i, 0, self.char_to_int["!"]] = 1
+            # encode the rest of the characters
+            for j, c in enumerate(smile):
+                if c in self.char_to_int:
+                    one_hot[i, j + 1, self.char_to_int[c]] = 1
+                else:
+                    one_hot[i, j + 1, self.char_to_int['UNK']] = 1
+            # encode end character
+            one_hot[i, len(smile) + 1, self.char_to_int["E"]] = 1
+        return one_hot[:, 0:-1, :], one_hot[:, 1:, :]
+
+    def create_char_to_int(self, smiles):
+        unique_chars = set(char for smile in smiles for char in smile)
+        char_to_int = {char: i for i, char in enumerate(unique_chars)}
+        char_to_int["!"] = len(char_to_int)
+        char_to_int["E"] = len(char_to_int)
+        char_to_int["UNK"] = len(char_to_int)
+        return char_to_int
+
+    
 def vectorize_smiles(smiles):
     """
     Vectorize a list of SMILES strings into one-hot encoded representations.

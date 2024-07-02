@@ -132,9 +132,15 @@ def main():
     # Prepare columns
     features = X_train.columns.to_list()
 
-    # Vectorize SMILES data in the DataFrame
-    X_train_vectorized, _ = train.vectorize_smiles(X_train)
-    X_test_vectorized, _ = train.vectorize_smiles(X_test)
+    # Instaniate the Encoder
+    vectorizer = train.SMILESVectorizer()
+    
+    # Fit the vectorizer on the training data
+    vectorizer.fit(X_train)
+    
+    # Transform both training and test data
+    X_train_vectorized, _ = vectorizer.transform(X_train)
+    X_test_vectorized, _ = vectorizer.transform(X_test)
     
     # Flatten and create feature names
     df_train_flattened = train.flatten_and_create_feature_names(X_train_vectorized)

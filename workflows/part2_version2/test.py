@@ -1,3 +1,4 @@
+SEED=42
 import sys
 import os
 sys.path.append('src/')
@@ -175,8 +176,6 @@ def shap_summary_models(ml_dict, features, features_processed, X_test, y_test, o
             best_model = model.best_estimator_
         except:
             best_model = model
-        print("Type of best_model:", type(best_model))
-
         if isinstance(best_model, catboost.CatBoostRegressor):
             explainer = shap.Explainer(best_model)
         elif isinstance(best_model, (tf.keras.Model, KerasRegressor)):  
