@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler, PowerTransformer
 from sklearn.decomposition import PCA
 import logging
@@ -109,25 +110,21 @@ def main():
 
     # Load the data
     all_data = pd.read_csv(args.data, index_col=False)
-    split = math.floor(float(args.train_size)*len(all_data)) # default 80% train
+    all_data.dropna(subset=[model_X], inplace=True)
+    
     logger.info(f'Splitting the data into a {float(args.train_size)*100}:{100-float(args.train_size)*100} split')
 
-    # Train and Test data
-    train_data = all_data[:split]
-    test_data  = all_data[split:]
+    X, y = format_data(all_data)
 
-    # Keep the Test and Train DataFrames (for plots)
-    train_data_raw = train_data.copy()
-    test_data_raw = test_data.copy()
-    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1 - float(args.train_size), random_state=42)
+    print(X_train.shape)
+    train_data_raw = pd.concat([X_train, pd.DataFrame(y_train)], axis=1)
+    test_data_raw = pd.concat([X_test, pd.DataFrame(y_test)], axis=1)
+
     # print some stats on data
     logger.info("Total samples: {}".format(len(all_data)))
-    logger.info("    Train samples: {}".format(len(train_data)))
-    logger.info("    Test samples: {}".format(len(test_data)))
-
-    # Split into X_train and y_train
-    X_train, y_train = format_data(train_data)
-    X_test, y_test = format_data(test_data)
+    logger.info("    Train samples: {}".format(len(X_train)))
+    logger.info("    Test samples: {}".format(len(X_test)))
 
     # Prepare columns
     features = X_train.columns.to_list()
@@ -136,11 +133,10 @@ def main():
     vectorizer = train.SMILESVectorizer()
     
     # Fit the vectorizer on the training data
-    vectorizer.fit(X_train)
-    
+    vectorizer.fit(X_train[model_X].to_list())
     # Transform both training and test data
-    X_train_vectorized, _ = vectorizer.transform(X_train)
-    X_test_vectorized, _ = vectorizer.transform(X_test)
+    X_train_vectorized, _ = vectorizer.transform(X_train[model_X].to_list())
+    X_test_vectorized, _ = vectorizer.transform(X_test[model_X].to_list())
     
     # Flatten and create feature names
     df_train_flattened = train.flatten_and_create_feature_names(X_train_vectorized)
@@ -150,8 +146,15 @@ def main():
     combined_df_train = train.combine_with_additional_features(df_train_flattened, None)
     combined_df_test = train.combine_with_additional_features(df_test_flattened, None)
     
+    # After encoding
+    train_encoded_df = pd.concat([combined_df_train, pd.DataFrame(y_train, columns=['RT'])], axis=1)
+    test_encoded_df = pd.concat([combined_df_test, pd.DataFrame(y_test, columns=['RT'])], axis=1)
+
+    train_encoded_df.to_csv(os.path.join(args.output_dir, 'train_encoded.csv'), index=False)
+    test_encoded_df.to_csv(os.path.join(args.output_dir, 'test_encoded.csv'), index=False)
+
     # Preprocess the training data
-    norm_X_train, processor = train.preprocess_combined_df(combined_df_train)
+    norm_X_train, processor = train.preprocess_combined_df(combined_df_train, args.output_dir)
     # Transform the test data using the fitted processor
     norm_X_test = processor.transform(combined_df_test)
 
@@ -202,6 +205,7 @@ def main():
         all_models = [catboost, lasso, lgbm, neural_net, rf, xgboost]
 
     ml_dict =  dict(zip(model_names, all_models))
+
     test.summary_stats_models(ml_dict, train_data_raw, test_data_raw, norm_X_train, y_train, norm_X_test, y_test, args.output_dir)
     test.shap_summary_models(ml_dict, features, features_processed, norm_X_test, y_test, args.output_dir)
 

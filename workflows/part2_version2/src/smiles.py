@@ -10,8 +10,6 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import pickle
-from keras.preprocessing.sequence import pad_sequences
-from keras.preprocessing.text import Tokenizer
 
 def compound_name_to_smiles(compound):
     """

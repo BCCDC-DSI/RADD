@@ -1,6 +1,7 @@
 SEED = 2022
 #!/usr/bin/env python
 # Train and test
+import timeit 
 import sys
 import os
 sys.path.append('src/')
@@ -80,8 +81,11 @@ class SMILESVectorizer:
         self.charset_size = None
 
     def fit(self, smiles):
+        
         self.char_to_int = self.create_char_to_int(smiles)
-        self.max_smiles_length = max(len(smile) for smile in smiles)
+        self.max_smiles_length = max([len(smile) for smile in smiles])
+        m = [len(smile) for smile in smiles]
+        print(f'max_smiles_length: {m}')
         self.charset_size = len(self.char_to_int)
         print(f"Charset Size: {self.charset_size}")
         print(f"Char to Int Mapping: {self.char_to_int}")
@@ -89,7 +93,7 @@ class SMILESVectorizer:
 
     def transform(self, smiles):
         embed_length = self.max_smiles_length + 2  # Add 2 for start ('!') and end ('E') characters
-        one_hot = np.zeros((len(smiles), embed_length, self.charset_size), dtype=np.int8)
+        one_hot = np.zeros((len(smiles), embed_length, self.charset_size), dtype=np.uint8)
         for i, smile in enumerate(smiles):
             # encode the start character
             one_hot[i, 0, self.char_to_int["!"]] = 1
@@ -106,11 +110,14 @@ class SMILESVectorizer:
     def create_char_to_int(self, smiles):
         unique_chars = set(char for smile in smiles for char in smile)
         char_to_int = {char: i for i, char in enumerate(unique_chars)}
-        char_to_int["!"] = len(char_to_int)
-        char_to_int["E"] = len(char_to_int)
-        char_to_int["UNK"] = len(char_to_int)
-        return char_to_int
+        char_to_int = {'l': 1, 'y': 2, '@': 3, '3': 4, 'H': 5, 'S': 6, 'F': 7, 'C': 8, 'r': 9, 's': 10, '/': 11, 'c': 12, 'o': 13,
+       '+': 14, 'I': 15, '5': 16, '(': 17, '2': 18, ')': 19, '9': 20, 'i': 21, '#': 22, '6': 23, '8': 24, '4': 25, '=': 26,
+       '1': 27, 'O': 28, '[': 29, 'D': 30, 'B': 31, ']': 32, 'N': 33, '7': 34, 'n': 35, '-': 36}
 
+        char_to_int["!"] = 0
+        char_to_int["E"] = 0
+        char_to_int["UNK"] = 0
+        return char_to_int
     
 def vectorize_smiles(smiles):
     """
@@ -214,7 +221,7 @@ def combine_with_additional_features(df_flattened, additional_features):
     combined_df = pd.concat([df_flattened, additional_features], axis=1)
     return combined_df
 
-def preprocess_combined_df(combined_df):
+def preprocess_combined_df(combined_df, output_dir):
     """
     Preprocess the combined DataFrame.
     
@@ -247,7 +254,8 @@ def preprocess_combined_df(combined_df):
     ], remainder='passthrough')
     
     X_preprocessed = preprocessor.fit_transform(combined_df)
-    
+    with open(os.path.join(output_dir, 'processor.pkl'), 'wb') as f:
+        pickle.dump(preprocessor, f)
     return X_preprocessed, preprocessor
 
 def cross_val(model, X_train, y_train, param_search):
@@ -317,6 +325,9 @@ def train_all_models(X_train, y_train, output_dir):
     lasso = cross_val(linear_model.Lasso(), X_train, y_train, lasso_params)
     with open(os.path.join(output_dir, 'models/lasso_model.pkl'), 'wb') as f:
         pickle.dump(lasso, f)
+    rtime = (tm_end - tm_start)/ 60
+    print( f'\n\n********* LASSO completed in {rtime:.2f}*********' )
+
 
     # Random Forest
     logger.info("Training Random Forest Regressor")
@@ -325,9 +336,13 @@ def train_all_models(X_train, y_train, output_dir):
         'n_estimators': [4, 16, 64],
         'min_samples_split': [8, 16, 32]
     }
+    tm_start = timeit.default_timer()    
     rf = cross_val(RandomForestRegressor(), X_train, y_train, rf_params)
     with open(os.path.join(output_dir, 'models/rf_model.pkl'), 'wb') as f:
         pickle.dump(rf, f)
+    rtime = (tm_end - tm_start)/ 60
+    print( f'\n\n********* RF completed in {rtime:.2f}*********' )
+
 
     # LGBM
     logger.info("Training LGBM Regressor")
@@ -336,9 +351,13 @@ def train_all_models(X_train, y_train, output_dir):
          'max_depth': [2,4,8],
          'min_data_in_leaf': [2,4,8,16,32]
     }
+    tm_start = timeit.default_timer()    
     lgbm = cross_val(lgb.LGBMRegressor(), X_train, y_train, lgbm_params)
     with open(os.path.join(output_dir, 'models/lgbm_model.pkl'), 'wb') as f:
         pickle.dump(lgbm, f)
+    rtime = (tm_end - tm_start)/ 60
+    print( f'\n\n********* LGB completed in {rtime:.2f}*********' )
+
 
     # Neural Network
     logger.info("Training Neural Network")
@@ -347,14 +366,17 @@ def train_all_models(X_train, y_train, output_dir):
     base_neural_net = KerasRegressor(build_fn=create_neural_net.build_fn(input_dim), epochs=50, batch_size=32, verbose=1)
 
     neural_net_params = {
-        'epochs' : [50, 100, 150],
-        'batch_size' : [16, 32, 64]
+        'epochs' : [100],
+        'batch_size' : [32]
     }
-
+    tm_start = timeit.default_timer()    
     neural_net = cross_val(base_neural_net, X_train, y_train, neural_net_params)
     neural_net_json = neural_net.best_estimator_.model.to_json() 
     with open(os.path.join(output_dir, 'models/neural_net_model.json'), 'w') as f:
         f.write(neural_net_json)
+    rtime = (tm_end - tm_start)/ 60
+    print( f'\n\n********* NN-2 completed in {rtime:.2f}*********' )
+
 
     # Save the model weights to HDF5
     neural_net.best_estimator_.model.save_weights(os.path.join(output_dir,"models/neural_net_model_weights.h5"))
@@ -369,9 +391,12 @@ def train_all_models(X_train, y_train, output_dir):
         'border_count':[25, 50, 75],
         'thread_count':[4]
         }
+    tm_start = timeit.default_timer()    
     catboost = cross_val(CatBoostRegressor(), X_train, y_train, catboost_params)
     with open(os.path.join(output_dir, 'models/catboost_model.pkl'), 'wb') as f:
         pickle.dump(catboost, f)
+    rtime = (tm_end - tm_start)/ 60
+    print( f'\n\n********* CB completed in {rtime:.2f}*********' )
 
     # XGBoost
     logger.info("Training XGBoost Regressor")
@@ -387,8 +412,13 @@ def train_all_models(X_train, y_train, output_dir):
         # Other parameters
         'objective':['reg:squarederror']
     }
+    
+    tm_start = timeit.default_timer()     
     xgboost = cross_val(XGBRegressor(), X_train, y_train, xgboost_params)
     with open(os.path.join(output_dir, 'models/xgboost_model.pkl'), 'wb') as f:
-        pickle.dump(xgboost, f)
+        pickle.dump(xgboost, f)    
+    rtime = (tm_end - tm_start)/ 60
+    print( f'\n\n********* XGB completed in {rtime:.2f}*********' )
+
 
     return catboost, lasso, lgbm, neural_net, rf, xgboost

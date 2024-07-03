@@ -84,10 +84,11 @@ def summary_stats_models(models, train_df, test_df, X_train, y_train, X_test, y_
     """
     train_mse_list = []
     test_mse_list = []
+    train_rsquare_list = []
+    test_rsquare_list = []
     train_mape_list = []
     test_mape_list = []
-    train_mase_list = []
-    test_mase_list = []
+    
     best_hyper_params = []
     for _, model in models.items():
 
@@ -95,15 +96,24 @@ def summary_stats_models(models, train_df, test_df, X_train, y_train, X_test, y_
         train_mse = np.sqrt(mean_squared_error(y_train, model.predict(X_train)))
         test_mse = np.sqrt(mean_squared_error(y_test, model.predict(X_test)))
 
+        # R square
+        train_rsquare = r2_score(y_train, model.predict(X_train))
+        test_rsquare = r2_score(y_test, model.predict(X_test))
+
         # MAPE
         train_mape = mean_absolute_percentage_error(y_train, model.predict(X_train))
         test_mape = mean_absolute_percentage_error(y_test, model.predict(X_test))
 
+        # Add it to lists
         train_mse_list.append(train_mse)
         test_mse_list.append(test_mse)
         
+        train_rsquare_list.append(train_rsquare)
+        test_rsquare_list.append(test_rsquare)
+
         train_mape_list.append(train_mape)
         test_mape_list.append(test_mape)
+
         # Also store the Best Hyperparams for each model
         # Check the model type and append hyperparameters accordingly
         if isinstance(model, (GridSearchCV, RandomizedSearchCV)):
@@ -129,18 +139,23 @@ def summary_stats_models(models, train_df, test_df, X_train, y_train, X_test, y_
     train_mse_df = utils.create_long_metrics_df(model_names, train_mse_list, 'RMSE', 'Train')
     test_mse_df = utils.create_long_metrics_df(model_names, test_mse_list, 'RMSE', 'Test')
 
+    train_rsquare_df = utils.create_long_metrics_df(model_names, train_rsquare_list, 'R2', 'Train')
+    test_rsquare_df = utils.create_long_metrics_df(model_names, test_rsquare_list, 'R2', 'Test')
+
     train_mape_df = utils.create_long_metrics_df(model_names, train_mape_list, 'MAPE', 'Train')
     test_mape_df = utils.create_long_metrics_df(model_names, test_mape_list, 'MAPE', 'Test')
     
     # Output Plots for Manuscript
     mse_df = pd.concat([train_mse_df, test_mse_df])
+    rsquare_df = pd.concat([train_rsquare_df, test_rsquare_df])
     mape_df = pd.concat([train_mape_df, test_mape_df])
 
     plotting.plot_metrics(mse_df, 'Model', 'RMSE', 'Dataset', output_dir, 'rmse_metrics.png')
+    plotting.plot_metrics(rsquare_df, 'Model', 'R2', 'Dataset', output_dir, 'r2_metrics.png')
     plotting.plot_metrics(mape_df, 'Model', 'MAPE', 'Dataset', output_dir, 'mape_metrics.png')
 
     # Write out the MSE in a file format
-    summary_df = pd.concat([mse_df, test_mape_df], axis=1)
+    summary_df = pd.concat([mse_df, rsquare_df, mape_df], axis=1)
     
     # Remove Duplicate columns
     summary_df = summary_df.loc[:,~summary_df.columns.duplicated()].copy()
