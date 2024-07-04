@@ -6,6 +6,7 @@ library(xcms)
 
 
 database_file = '/arc/project/st-ashapi01-1/RADD_libraries/HRN_2023-10-01_v4_v5.csv'
+database_file = '/arc/project/st-ashapi01-1/RADD_libraries/HRN_trimmed.csv'
 mzml_file = '/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/2024-0581BG01.mzML'
 
 snthresh <- 10     ### using values from outer-write-ms1-matches-xcms.R
