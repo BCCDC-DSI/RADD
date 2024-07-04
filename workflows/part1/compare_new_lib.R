@@ -23,31 +23,33 @@ db_filename_1 <- config$db_filename_1
 output_dir <- config$output_dir
 }
 
-# Check if the output directory exists, if not, create it
-if (!dir.exists(output_dir)) {
-  dir.create(output_dir, recursive = TRUE)
-  cat("Output directory created:", output_dir, "\n")
-} else {
-  cat("Output directory already exists:", output_dir, "\n")
-}
- 
+
 compare_new_lib <- function(mzml_file,
               output_dir = "/scratch/st-ashapi01-1/ms_data/expedited_2023/",
               database_file = "/arc/project/st-ashapi01-1/RADD_libraries/HRN_2023-10-01_v4_v5.csv"
                ) {
 
+  # Check if the output directory exists, if not, create it
+  if (!dir.exists(output_dir)) {
+    dir.create(output_dir, recursive = TRUE)
+    cat("Output directory created:", output_dir, "\n")
+  } else {
+    cat("Output directory already exists:", output_dir, "\n")
+  }
+  
+    
   # Print messages to track the execution flow
   print("Starting compare_new_lib() function...")
   
   # Ensure that database_dir and output_dir are valid paths
-  database_dir <- as.character(database_dir)
   output_dir <- as.character(output_dir)
   
   # Print the values of database_dir and output_dir
-  print(paste("Database directory:", database_dir))
+  print(paste("Database csv:", database_file))
   print(paste("Output directory:", output_dir))
+  
   # Ensure that database_dir and output_dir are valid paths
-  database_dir <- as.character(database_file)
+  database_file <- as.character(database_file)
   output_dir <- as.character(output_dir)
   
   
