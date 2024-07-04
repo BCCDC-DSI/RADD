@@ -6,7 +6,12 @@ library(xcms)
 
 
 database_file = '/arc/project/st-ashapi01-1/RADD_libraries/HRN_2023-10-01_v4_v5.csv'
+#db1 = read.csv( database_file, skip = 5) 
+#head(db1)
+
 database_file = '/arc/project/st-ashapi01-1/RADD_libraries/HRN_trimmed.csv'
+db1 = read.csv( database_file, skip = 5)
+head(db1)
 mzml_file = '/arc/project/st-cfjell-1/ms_data/expedited_2023/mzML/2024-0581BG01.mzML'
 
 snthresh <- 10     ### using values from outer-write-ms1-matches-xcms.R
@@ -44,8 +49,7 @@ spectra_df = data.frame(spectrum_name = names(spectra)) %>%
            sep = "\\.", remove = FALSE) %>% 
   dplyr::select(-file)
 
-# now, read databases
-db1 = read.csv( database_file, skip = 5)
+
 databases = list(NPS = db1) %>% 
   # filter to MS1/MS2 rows only
   map(~ {
@@ -58,6 +62,8 @@ databases = list(NPS = db1) %>%
 
 # function to calculate ppm boundary
 calc_ppm_range = function(theor_mass, err_ppm = 10) {
+  err_ppm = err_ppm[1]    # <--- 
+  print( paste( 'theor_mass', theor_mass, 'err', err_ppm )
   c(
     (-err_ppm / 1e6 * theor_mass) + theor_mass,
     (err_ppm / 1e6 * theor_mass) + theor_mass
@@ -124,6 +130,11 @@ results = map(seq_along(compounds), ~ {
     map(~ cbind(parent, .x))
 }) %>% 
   setNames(compounds)
+
+
+
+
+
 
 # add chromPeakSpectra results
 output = list(chromPeakSpectra = spectra_df,
