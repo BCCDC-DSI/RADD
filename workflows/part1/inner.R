@@ -1,3 +1,7 @@
+# Add path to aptainer with older xcm version
+.libPaths( c( '/arc/project/st-ashapi01-1/RADD/library_final/R/x86_64-pc-linux-gnu-library/4.3', '/arc/project/st-ashapi01-1/RADD/',.libPaths() ))
+
+# Load packages
 library(argparse)
 library(tidyverse)
 library(magrittr)
