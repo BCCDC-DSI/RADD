@@ -9,8 +9,8 @@ library(xcms)
 options(stringsAsFactors = FALSE)
 library(argparse)
 
-
- 
+#  DEBUG=1; source('/arc/project/st-ashapi01-1/RADD/workflow1/inner2.R') # works as of 2024-07-05
+#  DEBUG=0; source('/arc/project/st-ashapi01-1/RADD/workflow1/inner2.R') # works as of 2024-07-05
 if (1)
 {
 
