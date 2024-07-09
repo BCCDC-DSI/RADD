@@ -76,3 +76,8 @@ catboost_info/
 
 # Any test folders
 test*
+
+# Sockeye folders
+Analysis*
+Figures*
+Metadata*

@@ -42,3 +42,15 @@ def plot_shap(shap_values, X_test, features_final, name, output_dir, filename):
     shap.summary_plot(shap_values, features=X_test, show = False, feature_names = features_final)
     plt.title('SHAP summary plot of ' + name)
     plt.savefig(os.path.join(output_dir, 'SHAP_summary_' +  str(name) + '_' + filename + '.png'), bbox_inches='tight')
+
+def plot_error_bins(df_long, output_dir, filename='error_plots.png'):
+    # Plotting with seaborn
+    plt.figure(figsize=(12, 6))
+    sns.countplot(data=df_long, x='model', hue='error_bin')
+    plt.title('Error Distribution Across Models')
+    plt.xlabel('Model')
+    plt.ylabel('Count')
+    plt.xticks(rotation=45)
+    plt.legend(title='Error Bin')
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, filename))
