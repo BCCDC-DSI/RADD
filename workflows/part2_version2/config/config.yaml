@@ -2,8 +2,8 @@
 descriptors : ['logD', 'logP', 'nO', 'nC']
 
 # Variable Names
-model_index : 'Compound' # Sample ID
-model_y : 'PTC Confirmed RT'
+model_index : 'Name' # Sample ID
+model_y : 'Retention Time (min)'
 model_X : 'SMILES'
 model_ohe : ['LAB', 'DrugClass']
 # Column Names

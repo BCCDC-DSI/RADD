@@ -1,7 +1,15 @@
 SEED=42
 import sys
 import os
-sys.path.append('src/')
+# Get the directory of the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Append the src directory to the Python path
+src_dir = os.path.join(current_dir, 'src')
+sys.path.append(src_dir)
+
+# Path to the config file
+config_path = os.path.join(current_dir, 'config', 'config.yaml')
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -36,7 +44,7 @@ tf.compat.v1.disable_v2_behavior()
 
 logger = logging.getLogger('RADD')
 
-with open('config/config.yaml') as f:
+with open(config_path) as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
 ## Load configurations

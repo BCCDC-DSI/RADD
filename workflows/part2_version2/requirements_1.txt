@@ -1,4 +1,4 @@
-catboost=1.2.5
+catboost==1.2.5
 keras==2.12.0
 lightgbm==4.4.0
 rdkit==2024.3.1

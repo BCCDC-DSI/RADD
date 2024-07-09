@@ -4,7 +4,12 @@ SEED = 2022
 import timeit 
 import sys
 import os
-sys.path.append('src/')
+# Get the directory of the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Append the src directory to the Python path
+src_dir = os.path.join(current_dir, 'src')
+sys.path.append(src_dir)
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -108,8 +113,6 @@ class SMILESVectorizer:
         return one_hot[:, 0:-1, :], one_hot[:, 1:, :]
 
     def create_char_to_int(self, smiles):
-        unique_chars = set(char for smile in smiles for char in smile)
-        char_to_int = {char: i for i, char in enumerate(unique_chars)}
         char_to_int = {'l': 1, 'y': 2, '@': 3, '3': 4, 'H': 5, 'S': 6, 'F': 7, 'C': 8, 'r': 9, 's': 10, '/': 11, 'c': 12, 'o': 13,
        '+': 14, 'I': 15, '5': 16, '(': 17, '2': 18, ')': 19, '9': 20, 'i': 21, '#': 22, '6': 23, '8': 24, '4': 25, '=': 26,
        '1': 27, 'O': 28, '[': 29, 'D': 30, 'B': 31, ']': 32, 'N': 33, '7': 34, 'n': 35, '-': 36}
@@ -322,9 +325,11 @@ def train_all_models(X_train, y_train, output_dir):
         'alpha' : [0.001, 0.01, 0.1],
         'max_iter': [500, 1000, 2000]
     }
+    tm_start = timeit.default_timer()    
     lasso = cross_val(linear_model.Lasso(), X_train, y_train, lasso_params)
     with open(os.path.join(output_dir, 'models/lasso_model.pkl'), 'wb') as f:
         pickle.dump(lasso, f)
+    tm_end = timeit.default_timer()    
     rtime = (tm_end - tm_start)/ 60
     print( f'\n\n********* LASSO completed in {rtime:.2f}*********' )
 
@@ -340,6 +345,7 @@ def train_all_models(X_train, y_train, output_dir):
     rf = cross_val(RandomForestRegressor(), X_train, y_train, rf_params)
     with open(os.path.join(output_dir, 'models/rf_model.pkl'), 'wb') as f:
         pickle.dump(rf, f)
+    tm_end = timeit.default_timer()    
     rtime = (tm_end - tm_start)/ 60
     print( f'\n\n********* RF completed in {rtime:.2f}*********' )
 
@@ -355,6 +361,7 @@ def train_all_models(X_train, y_train, output_dir):
     lgbm = cross_val(lgb.LGBMRegressor(), X_train, y_train, lgbm_params)
     with open(os.path.join(output_dir, 'models/lgbm_model.pkl'), 'wb') as f:
         pickle.dump(lgbm, f)
+    tm_end = timeit.default_timer()    
     rtime = (tm_end - tm_start)/ 60
     print( f'\n\n********* LGB completed in {rtime:.2f}*********' )
 
@@ -374,6 +381,7 @@ def train_all_models(X_train, y_train, output_dir):
     neural_net_json = neural_net.best_estimator_.model.to_json() 
     with open(os.path.join(output_dir, 'models/neural_net_model.json'), 'w') as f:
         f.write(neural_net_json)
+    tm_end = timeit.default_timer()    
     rtime = (tm_end - tm_start)/ 60
     print( f'\n\n********* NN-2 completed in {rtime:.2f}*********' )
 
@@ -395,6 +403,7 @@ def train_all_models(X_train, y_train, output_dir):
     catboost = cross_val(CatBoostRegressor(), X_train, y_train, catboost_params)
     with open(os.path.join(output_dir, 'models/catboost_model.pkl'), 'wb') as f:
         pickle.dump(catboost, f)
+    tm_end = timeit.default_timer()    
     rtime = (tm_end - tm_start)/ 60
     print( f'\n\n********* CB completed in {rtime:.2f}*********' )
 
@@ -416,9 +425,9 @@ def train_all_models(X_train, y_train, output_dir):
     tm_start = timeit.default_timer()     
     xgboost = cross_val(XGBRegressor(), X_train, y_train, xgboost_params)
     with open(os.path.join(output_dir, 'models/xgboost_model.pkl'), 'wb') as f:
-        pickle.dump(xgboost, f)    
+        pickle.dump(xgboost, f)
+    tm_end = timeit.default_timer()        
     rtime = (tm_end - tm_start)/ 60
     print( f'\n\n********* XGB completed in {rtime:.2f}*********' )
-
 
     return catboost, lasso, lgbm, neural_net, rf, xgboost
