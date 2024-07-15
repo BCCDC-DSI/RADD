@@ -55,3 +55,7 @@ Data/
 *.csv
 *.xls
 *.xlsx
+
+# Pycache
+__pycache__
+*.pkl
