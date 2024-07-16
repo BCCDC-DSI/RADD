@@ -27,12 +27,16 @@ ssh username@sockeye.arc.ubc.ca
 ```
 cd /arc/project/st-username-1/RADD
 ```
- 
-4. Use apptainer prepared by Chris [see logs](https://github.com/BCCDC-DSI/RADD/blob/main/workflows/part1/log.md)
+
+## Running part 1
+
+1. Interactively
+
+- Use apptainer prepared by Chris [see logs](https://github.com/BCCDC-DSI/RADD/blob/main/workflows/part1/log.md)
  
  [See slide 7](https://docs.google.com/presentation/d/1EoPfQdC32cnRHPE95FKA8puVm2C3zmvNykvNYOYzaO8/edit#slide=id.g2e0ef6ef4e5_0_648)
 
-  If this runs and produces the following output:
+ If this runs and produces the following output:
 
  ```
  Detecting mass traces at 25 ppm ... OK
@@ -126,6 +130,16 @@ cd /arc/project/st-username-1/RADD
 
  The script is working perfectly fine and you can run all the tests.
 
- 5. Batch submit jobs: see [how-to notes](https://github.com/BCCDC-DSI/RADD/issues/36) 
+2. Submit as a batch array of jobs: see [how-to notes](https://github.com/BCCDC-DSI/RADD/issues/36) 
 
+3. Reformat RDS to .csv / .xlsx
+
+## Part 2 
+
+[Pending]
+ 
+
+## Part 3
+
+[Pending]
  
