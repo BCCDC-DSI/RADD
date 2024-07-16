@@ -16,7 +16,7 @@ PWD = os.path.abspath(os.getcwd())
 print( len(sys.argv), 'arguments' )  # ipython
 if len(sys.argv)<2:
   print( '\nUsage:\n')
-  print( 'python rds_to_excel.py /scratch/st-ashapi01-1/rds_files/data_highresnps/ \n')
+  print( 'python rds_to_excel.py /scratch/st-ashapi01-1/rds_files/data_highresnps/ \n\tor\n')
   print( 'python rds_to_excel.py /scratch/st-ashapi01-1/rds_files/data_2024nps-db/')
   exit()   
 else:
