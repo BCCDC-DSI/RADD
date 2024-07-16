@@ -15,7 +15,7 @@ PWD = os.path.abspath(os.getcwd())
 
 print( len(sys.argv), 'arguments' )  # ipython
 if len(sys.argv)<2:
-  print( '\n:Usage:\n')
+  print( '\nUsage:\n')
   print( 'python rds_to_excel.py /scratch/st-ashapi01-1/rds_files/data_highresnps/ \n')
   print( 'python rds_to_excel.py /scratch/st-ashapi01-1/rds_files/data_2024nps-db/')
   exit()   
@@ -23,7 +23,6 @@ else:
   folder = sys.argv[1]
 
 print( folder , '\n')
-
 os.chdir(folder)
 filenames=glob( '*.rds')
 print( f'processing {len(filenames)} files')
@@ -70,7 +69,7 @@ for f,filename in enumerate( filenames ):
         SPEC += [spectrum] * n
         INTENS += [intens] * n
         RT += [rt] * n
-        MS1 += ms1
+        MS1 += [m1] * n
         MS2 += ms2
         I += i
 
