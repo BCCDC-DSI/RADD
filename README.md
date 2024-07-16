@@ -38,6 +38,9 @@ cd /arc/project/st-username-1/RADD
 
  If this runs and produces the following output:
 
+ <details>
+  
+
  ```
  Detecting mass traces at 25 ppm ... OK
  Detecting chromatographic peaks in 41125 regions of interest ... OK: 9122 found.
@@ -129,6 +132,9 @@ cd /arc/project/st-username-1/RADD
  ```
 
  The script is working perfectly fine and you can run all the tests.
+ 
+ </details>
+
 
 2. Submit as a batch array of jobs: see [how-to notes](https://github.com/BCCDC-DSI/RADD/issues/36) 
 
