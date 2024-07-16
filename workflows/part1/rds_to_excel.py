@@ -30,7 +30,7 @@ input('Ready to proceed? [Press ENTER if yes]')
 
 DEBUG = 0
 
-FILE, NA, INTENS, I, SPEC, MS1, MS2, RT = [],[],[],[],[],[],[],[] 
+FILE, NA, SPEC, INTENS, RT, MS1, MS2, I = [],[],[],[],[],[],[],[] 
 for f,filename in enumerate( filenames ):
   dat = read_rds(os.path.join( folder, filename))
   for indx in range(100):
@@ -43,8 +43,10 @@ for f,filename in enumerate( filenames ):
         na = A[0]['data'][0]                 
         try:           
           spectrum = D[0]['data'][19]['data'][0]
-          ms1 = D[0]['data'][20]['data'][0]
-          rt = D[0]['data'][21]['data'][0]                  
+          ms1 = D[0]['data'][20]['data'][0]          
+          rt = D[0]['data'][21]['data'][0] 
+          intens = D[0]['data'][22]['data'][0]                  
+          
           ms2 = list(A[ 20 ]['data'])
           i = list(A[ 21 ]['data'])
         except:
