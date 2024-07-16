@@ -28,16 +28,18 @@ filenames=glob( '*.rds')
 print( f'processing {len(filenames)} files')
 input('Ready to proceed? [Press ENTER if yes]')
 
+# dat['data'][0] # contains 'CP0299.F1.S0177'
+
 DEBUG = 0
+
+d2, d1 = 1, 1
 
 FILE, NA, SPEC, INTENS, RT, MS1, MS2, I = [],[],[],[],[],[],[],[] 
 for f,filename in enumerate( filenames ):
   dat = read_rds(os.path.join( folder, filename))
-  for indx in range(100):
-    # D = dat['data'][0] # contains 'CP0299.F1.S0177'
-    d1 = 1
-    D = dat['data'][d1]['data'][indx]['data']
-    d2 = 1
+  N= len(dat['data'][d1]['data'][indx] )
+  for indx in range(N):  
+    D = dat['data'][d1]['data'][indx]['data']    
     if len( D ) > 0:
         A = D[d2]['data']
         na = A[0]['data'][0]                 
