@@ -69,7 +69,7 @@ for f,filename in enumerate( filenames ):
         SPEC += [spectrum] * n
         INTENS += [intens] * n
         RT += [rt] * n
-        MS1 += [m1] * n
+        MS1 += [ms1] * n
         MS2 += ms2
         I += i
 
