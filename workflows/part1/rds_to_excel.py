@@ -15,9 +15,10 @@ PWD = os.path.abspath(os.getcwd())
 
 print( len(sys.argv), 'arguments' )  # ipython
 if len(sys.argv)<2:
+  print( '\n:Usage:\n')
   print( 'python rds_to_excel.py /scratch/st-ashapi01-1/rds_files/data_highresnps/ \n')
   print( 'python rds_to_excel.py /scratch/st-ashapi01-1/rds_files/data_2024nps-db/')
-  return   
+  exit()   
 else:
   folder = sys.argv[1]
 
