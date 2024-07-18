@@ -1,0 +1,15 @@
+catboost==1.2.5
+keras==2.12.0
+lightgbm==4.4.0
+rdkit==2024.3.1
+shap==0.46.0
+scikit-learn==1.2.2
+scipy==1.11.1
+seaborn==0.12.2
+tensorboard==2.12.3
+tensorboard-data-server==0.7.1
+tensorflow==2.12.0
+openpyxl==3.1.4
+pubchempy
+pyyaml==6.0.1 
+xgboost==2.1.0

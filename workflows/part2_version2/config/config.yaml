@@ -1,0 +1,25 @@
+# This config file hosts the variable names, lists and column identifiers for the nps script
+# Variable Names
+model_index : 'Compound' # Sample ID ['Name', 'Compound']
+test_model_index : 'Name'
+model_y : 'PTC Confirmed RT'  #['PTC Confirmed RT', 'Retention Time (min)']
+test_model_y : 'Retention Time (min)'
+model_X : 'SMILES'
+# Column Names
+lab_column_name : 'LAB'
+
+## Filepaths
+
+# Create Dataset
+working_dir : '/arc/project/st-ashapi01-1/git/RADD/workflows/part2_version2'
+raw_data_dir : 'Metadata'
+output_dir : 'Data'
+linking_dir : 'output'
+# ML pipeline
+default_output_dir : 'output'
+model_names : ['CatBoost', 'Lasso', 'LGBM', 'Neural Network','Random Forest', 'XGBoost'] 
+## Filenames
+raw_data_filename : 'combined_db_20240708.csv'
+linking_filename : 'Modeling_Data.xlsx'
+smiles_dict_filename : 'smiles_dict.pkl'
+output_filename : 'training_data_bccdc_20240708.csv'

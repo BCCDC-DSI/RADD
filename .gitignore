@@ -58,4 +58,27 @@ Data/
 
 # Pycache
 __pycache__
+
+# Images
+*.png
+
+# all pickle files
+*.pkl
+
+# Catboost info
+catboost_info/
+
+# Neural Network weights
+*.h5
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Any test folders
+test*
+
+# Sockeye folders
+Analysis*
+Figures*
+Metadata*
 *.pkl
