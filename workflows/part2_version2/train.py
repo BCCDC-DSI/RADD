@@ -100,16 +100,14 @@ class SMILESVectorizer:
         embed_length = self.max_smiles_length + 2  # Add 2 for start ('!') and end ('E') characters
         one_hot = np.zeros((len(smiles), embed_length, self.charset_size), dtype=np.uint8)
         for i, smile in enumerate(smiles):
-            # encode the start character
-            one_hot[i, 0, self.char_to_int["!"]] = 1
-            # encode the rest of the characters
+            one_hot[i, 0, self.char_to_int["!"]] = 1  # encode start character
             for j, c in enumerate(smile):
-                if c in self.char_to_int:
-                    one_hot[i, j + 1, self.char_to_int[c]] = 1
-                else:
-                    one_hot[i, j + 1, self.char_to_int['UNK']] = 1
-            # encode end character
-            one_hot[i, len(smile) + 1, self.char_to_int["E"]] = 1
+                if j + 1 < embed_length - 1:  # ensure within bounds
+                    if c in self.char_to_int:
+                        one_hot[i, j + 1, self.char_to_int[c]] = 1
+                    else:
+                        one_hot[i, j + 1, self.char_to_int['UNK']] = 1
+            one_hot[i, min(len(smile) + 1, embed_length - 1), self.char_to_int["E"]] = 1  # encode end character
         return one_hot[:, 0:-1, :], one_hot[:, 1:, :]
 
     def create_char_to_int(self, smiles):

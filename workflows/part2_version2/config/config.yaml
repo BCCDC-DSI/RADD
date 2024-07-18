@@ -1,7 +1,9 @@
 # This config file hosts the variable names, lists and column identifiers for the nps script
 # Variable Names
-model_index : 'Compound' # Sample ID
-model_y : 'PTC Confirmed RT'
+model_index : 'Compound' # Sample ID ['Name', 'Compound']
+test_model_index : 'Name'
+model_y : 'PTC Confirmed RT'  #['PTC Confirmed RT', 'Retention Time (min)']
+test_model_y : 'Retention Time (min)'
 model_X : 'SMILES'
 # Column Names
 lab_column_name : 'LAB'

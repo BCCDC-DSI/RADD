@@ -45,8 +45,10 @@ def plot_shap(shap_values, X_test, features_final, name, output_dir, filename):
 
 def plot_error_bins(df_long, output_dir, filename='error_plots.png'):
     # Plotting with seaborn
+    error_bin_order = ['<= 1.0', '> 1.0 and <= 2.0', '> 2.0']
+    
     plt.figure(figsize=(12, 6))
-    sns.countplot(data=df_long, x='model', hue='error_bin')
+    sns.countplot(data=df_long, x='model', hue='error_bin', hue_order=error_bin_order)
     plt.title('Error Distribution Across Models')
     plt.xlabel('Model')
     plt.ylabel('Count')

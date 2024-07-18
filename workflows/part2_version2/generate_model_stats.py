@@ -47,6 +47,8 @@ def create_output_dirs(output_dir):
 ## Load configurations
 model_index = config['model_index']
 model_y = config['model_y']
+test_model_index = config['test_model_index']
+test_model_y = config['test_model_y']
 model_X = config['model_X']
 model_names = config['model_names']
 
@@ -77,7 +79,7 @@ def create_norm_X(df, vectorizer, processor):
 
     return norm_X
 
-def make_error_bins(df):
+def make_error_bins(df, model_index, model_y):
     """
     Make Error bins for the supplied dataframe of retention times
     
@@ -85,6 +87,10 @@ def make_error_bins(df):
     ----------
         df : pd.DataFrame
             DataFrame of SMILES data, Retention Times and predicted retention times
+        model_index : String
+            The name of the Model index column
+        model_y : String
+            The name of the prediction (usually Retention Time in mins.)
     Returns
     -------
         df_long : pd.DataFrame
@@ -100,7 +106,8 @@ def make_error_bins(df):
         for model in model_names:
             if model != 'model_y':
                 long_data.append({
-                    'Compound' : row[model_X],
+                    'Compound': row[model_index],
+                    'SMILES' : row[model_X],
                     'Actual RT': row[model_y],
                     'model': model,
                     'prediction': row[model+'_prediction'],
@@ -167,7 +174,7 @@ def main():
             i.load_weights(neural_net_weights)
 
     # Load the preprocessor
-    with open(os.path.join(args.load_preprocessor), 'rb') as f:
+    with open(args.load_preprocessor, 'rb') as f:
         processor = pickle.load(f)
 
     # Instaniate the Encoder
@@ -188,8 +195,8 @@ def main():
         test_database[name + '_prediction'] = all_models[i].predict(test_database_norm_X)
     
     # Create the long dataframes
-    database_plot = make_error_bins(database)
-    test_database_plot = make_error_bins(test_database)
+    database_plot = make_error_bins(database, model_index, model_y)
+    test_database_plot = make_error_bins(test_database, test_model_index, test_model_y)
 
     # Generate error bin plots
     plotting.plot_error_bins(database_plot, args.output_dir, 'error_db.png')
