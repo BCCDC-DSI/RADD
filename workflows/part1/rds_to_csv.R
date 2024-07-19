@@ -1,6 +1,6 @@
 
-#dat <- readRDS("C:/Users/LT2666_SA/Desktop/2023-0001BG01.rds")
-file = "C:/Users/LT2666_SA/Downloads/2023-1175BG01.rds"
+
+
 
 
 install.packages( 'pacman', repos = "http://cran.us.r-project.org" )
