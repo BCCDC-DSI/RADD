@@ -136,14 +136,25 @@ cd /arc/project/st-username-1/RADD
 
 2. Submit as a batch array of jobs: see [how-to notes](https://github.com/BCCDC-DSI/RADD/issues/36) 
 
-3. Reformat RDS to .csv / .xlsx
+3. Reformat ```.rds``` to ```.csv``` using R script
+  - ```rds_to_csv.R```
 
+ <details>
+ 
+ <summary>Archive</summary>
+  
+ 3a. Reformat RDS to .csv / .xlsx using Python script
+ - ```rds_to_csv.py```
+ 
+ </details>
+ 
 ## Part 2 
 
-[Pending]
- 
+[Pending] 
 
 ## Part 3
+
+Source: https://github.com/skinnider/NPS-generation
 
 [Pending]
  
