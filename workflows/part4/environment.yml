@@ -1,0 +1,19 @@
+name: pt4
+dependencies:
+  - ipython
+  - ipykernel
+  - nltk
+  - numpy
+  - pymc3
+  - scikit-learn
+  - scipy
+  - seaborn
+  - statsmodels
+  - tensorflow
+  - lightgbm
+  - shap
+  - pip
+  - pip:
+    - pycaret
+    - matplotlib
+    - streamlit_pandas_profiling
