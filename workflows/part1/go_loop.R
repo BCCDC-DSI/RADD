@@ -54,8 +54,8 @@ print( '\n\n' )
 
 
 
-db1[,7] = as.numeric(db1[,7])
-# db1[,5] = as.numeric(db1[,5])  # uncomment if runs into err
+d=7; db1[,d] = as.numeric(db1[,d])
+d=5; db1[,d] = as.numeric(db1[,d])
 
 # ================== output subfolder path
 subfolder = paste(strsplit(x=basename(db_filename), split=".", fixed=TRUE)[[1]][1])
@@ -131,8 +131,6 @@ for (filename in FILES)
       # filter to MS1/MS2 rows only
       map(~ {
         db = .x
-        stop_at = which(db$Compound.Name == "") %>% head(1)
-        db %<>% extract(seq_len(stop_at), )
         keep = map_lgl(db, ~ n_distinct(.x) > 1)
         db %<>% extract(, keep)
       })
