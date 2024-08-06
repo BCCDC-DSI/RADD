@@ -150,11 +150,14 @@ cd /arc/project/st-username-1/RADD
  
 ## Part 2 
 
-[Pending] 
+- Completed; see pt2-branch 
 
 ## Part 3
 
-Source: https://github.com/skinnider/NPS-generation
+- Replication of SMILES-generation environment - completed
+- Source: https://github.com/skinnider/NPS-generation
+
+## Part 4
 
 [Pending]
  
