@@ -23,7 +23,7 @@ head -n 1 ${file}_ms2.csv > combined_ms2.txt && tail -n+2 -q *ms2.csv >> combine
 
 
 
-# 2024-08-05 - not completed yet; need to wait few hours and then copy-paste below
+
 
 cd /scratch/st-ashapi01-1/expedited_2023/combined_db_20240801/
 file=2023-0001BG01
