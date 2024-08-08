@@ -47,11 +47,13 @@ def assign_class(new_df, i):
   inds = np.intersect1d( new_df.index, i )
   new_df.loc[ inds[0] , ['class_label'] ] = 1       
   return new_df
-with Pool(ncores) as mp_pool:
-    for i in tqdm(pos_samps.index[:ncores]):
-        mp_pool.apply_async( assign_class, (i,))
-    mp_pool.close()
-    mp_pool.join()
+
+if 0:
+  with Pool(ncores) as mp_pool:
+      for i in tqdm(pos_samps.index[:ncores]):
+          mp_pool.apply_async( assign_class, (i,))
+      mp_pool.close()
+      mp_pool.join()
 
 for j,i in enumerate( tqdm(pos_samps.index)):  
   inds = np.intersect1d( new_df.index, i )
