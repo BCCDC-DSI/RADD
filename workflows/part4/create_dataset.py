@@ -29,9 +29,10 @@ print( 'After removing detected samples without mzML, size of pos sample is:', p
 
 def join(S=1):
   if S==1:
-    f=['filename','rt','m.z', 'mz', 'spectrum']
+    f=['filename','compound_name', 'spectrum', 'Retention.Time', 'm.z', 'mz', 'rt', 'intens' ]
   else:
     f=['filename','compound_name', 'spectrum', 'm.z', 'mz', 'i']    
+    
   for d in [2020,2021,2022,2023,2024]:
     data_dir = f'/scratch/st-ashapi01-1/expedited_{d}/combined_db_20240801/'  
     subcohort=pd.read_csv( data_dir + f'combined_ms{S}.txt')[ f ]
