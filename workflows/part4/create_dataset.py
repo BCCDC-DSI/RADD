@@ -19,7 +19,13 @@ pool = multiprocessing.Pool()
 ncores = pool._processes
 
 all_files = pd.read_csv('/arc/project/st-cfjell-1/ms_data/mzmL_files/file_list.csv') # file_name
-pos_samps = pd.read_excel('/arc/project/st-ashapi01-1/git/afraz96/RADD/workflows/part4/Data/tbltest.xlsx', engine = 'openpyxl' )
+
+# TODO: Aaron will provide us with new set witin next two weeks, according to 4-way mtg 2024-08-08
+# 
+# pos_samps = pd.read_excel('/arc/project/st-ashapi01-1/git/afraz96/RADD/workflows/part4/Data/tbltest.xlsx', engine = 'openpyxl' )
+# 
+pos_samps = pd.read_excel('/arc/project/st-ashapi01-1/git/afraz96/RADD/workflows/part4/Data/___________', engine = 'openpyxl' )
+  
 pos_samps = pos_samps.merge( all_files, how='left', on='Case_PTC_No' )
 pos_samps['filename_pref']= pos_samps.file_name.str.strip('.mzML')
 pos_samps.set_index( 'filename_pref', inplace= True )
@@ -68,7 +74,7 @@ for j,i in enumerate( tqdm(pos_samps.index)):
   try:
     new_df.loc[ inds[0], ['class_label'] ] = 1       
     if (j % 1000)==0:
-      new_df.to_csv( '/arc/project/st-ashapi01-1/git/ywtang/RADD/workflows/part4/dataset.csv' )
+      new_df.to_csv( '/arc/project/st-ashapi01-1/git/ywtang/RADD/workflows/part4/dataset_precursor_ion_matches.csv' )
       print( np.sum(new_df.class_label), 'pos samples' )
       print( np.sum(new_df.class_label==0), 'neg samples' )
   except:
@@ -76,16 +82,13 @@ for j,i in enumerate( tqdm(pos_samps.index)):
 
 
 
-# Add year of data collection
+# Add year of data acquisition
 # 
 new_df['year'] = new_df.index
 new_df['year'] = new_df['year'].str[:4]
 new_df['year'] = new_df['year'].astype(np.uint16)
 
 
-
-dev_set  = new_df[ new_df['year'] < 2023 ]
-test_set = new_df[ new_df['year'] == 2023 ]
 
 # Prelim EDA
 # 
@@ -105,4 +108,9 @@ def show_stats(df,st):
   
 show_stats(neg_samples,'negative')
 show_stats(pos_samples,'positive')
- 
+
+
+# Propose split for Afraz in the ML-pipeline
+# 
+dev_set  = new_df[ new_df['year'] < 2023 ]
+test_set = new_df[ new_df['year'] == 2023 ]
