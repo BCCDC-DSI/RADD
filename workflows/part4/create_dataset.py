@@ -5,8 +5,8 @@
 # 1) Issue interactive job to run python with multiprocessing:
 #    salloc --time=10:0:0 --mem=40G --nodes=1 --ntasks=48 --account=st-ashapi01-1
 #
-#
-# 2) Run:
+# 2) Copy-paste:
+#    conda activate chemenv
 #    python /arc/project/st-ashapi01-1/git/ywtang/RADD/workflows/part4/create_dataset.py
 #
 
@@ -27,19 +27,26 @@ pos_samps.set_index( 'filename_pref', inplace= True )
 pos_samps = pos_samps[pos_samps['file_name'].notna()] 
 print( 'After removing detected samples without mzML, size of pos sample is:', pos_samps.shape )
 
-for d in [2020,2021,2022,2023,2024]:
-  data_dir = f'/scratch/st-ashapi01-1/expedited_{d}/combined_db_20240801/'
-
-  ms1_subcohort=pd.read_csv( data_dir + 'combined_ms1.txt')[['filename','rt','m.z', 'mz', 'spectrum']]
-  q=np.where( ~np.isnan( ms1_subcohort['rt'] ) )[0]    
-  print('Joining ms1 (precursor ion) results from mzML acquired in', d, )  
-  if d == 2020:
-    new_df = ms1_subcohort
+def join(S=1):
+  if S==1:
+    f=['filename','rt','m.z', 'mz', 'spectrum']
   else:
-    new_df = pd.concat( [new_df, ms1_subcohort] )
-
-new_df.set_index( 'filename', inplace=True )
-
+    f=['filename','compound_name', 'spectrum', 'm.z', 'mz', 'i']    
+  for d in [2020,2021,2022,2023,2024]:
+    data_dir = f'/scratch/st-ashapi01-1/expedited_{d}/combined_db_20240801/'  
+    subcohort=pd.read_csv( data_dir + f'combined_ms{S}.txt')[ f ]
+    q=np.where( ~np.isnan( subcohort['m.z'] ) )[0]    
+    print(f'Joining ms{S} (precursor ion) results from mzML acquired in', d, )  
+    if d == 2020:
+      new_df = subcohort
+    else:
+      new_df = pd.concat( [new_df, subcohort] )
+  
+  new_df.set_index( 'filename', inplace=True )
+  return new_df
+# new_df2=join(S=2)
+new_df=join(S=1)
+ 
 # Assign class to samples
 #
 new_df[ 'class_label' ] = 0 
