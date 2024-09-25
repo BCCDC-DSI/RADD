@@ -102,4 +102,27 @@ def load_smiles_dict(pickle_filename):
             return pickle.load(f)
     else:
         return {}
-    
+
+def canonicalize_smiles(df, smiles_column):
+    """
+    Canonicalizes the SMILES strings in the specified column of a DataFrame.
+
+    Parameters:
+    - df: pandas DataFrame containing the SMILES column.
+    - smiles_column: str, the name of the column containing the SMILES strings.
+
+    Returns:
+    - pandas DataFrame with a new column 'canonical_SMILES' containing the canonical SMILES.
+    """
+    def to_canonical(smiles):
+        try:
+            mol = Chem.MolFromSmiles(smiles)
+            if mol:
+                return Chem.MolToSmiles(mol, canonical=True)
+            else:
+                return None
+        except:
+            return None
+
+    df[smiles_column] = df[smiles_column].apply(to_canonical)
+    return df

@@ -25,7 +25,8 @@ output_filename = config['output_filename']
 
 
 # Load and apply rdkit SMILES method
-data = utils.load_and_clean_data(os.path.join(raw_data_dir, raw_data_filename))
+#data = utils.load_and_clean_data(os.path.join(raw_data_dir, raw_data_filename))
+data = pd.read_csv(os.path.join(raw_data_dir, raw_data_filename))
 print(data.head())
 # we only wish to retain the not missing prediction + no repeats
 print(data.shape)
@@ -38,5 +39,7 @@ smiles_dict = smiles.load_smiles_dict(smiles_dict_filename)
 data['SMILES'] = data[model_index].apply(lambda x: smiles.get_smiles_with_url(x, smiles_dict, smiles_dict_filename))
 print(data.head())
 
+# check canonical SMILES 
+data = smiles.canonicalize_smiles(data, 'SMILES')
 # Save the data
 data.to_csv(os.path.join(output_dir,output_filename), index=False)
