@@ -61,7 +61,7 @@ def add_smiles_to_data(data, compound_col = 'Compound'):
 
     return data
 
-def get_smiles_with_url(compound_name, smiles_dict, pickle_filename):
+def get_smiles_with_url(compound_name, smiles_dict, pickle_filename, existing_value=None):
     # Check if the compound's SMILES is already in the dictionary
     if compound_name in smiles_dict:
         return smiles_dict[compound_name]
@@ -83,12 +83,14 @@ def get_smiles_with_url(compound_name, smiles_dict, pickle_filename):
             return smiles
         else:
             print(f"No SMILES data found for compound: {compound_name}")
-            return None
+            print(f"Using existing value: {existing_value}")
+            return existing_value
     except requests.exceptions.HTTPError as http_err:
         print(f"HTTP error occurred for {compound_name}: {http_err}")
     except Exception as err:
         print(f"An error occurred for {compound_name}: {err}")
-    return None
+    print(f'Function failed, using existing value: {existing_value}')
+    return existing_value
 
 # Function to save the SMILES dictionary to a pickle file
 def save_smiles_dict(smiles_dict, pickle_filename):
@@ -120,9 +122,9 @@ def canonicalize_smiles(df, smiles_column):
             if mol:
                 return Chem.MolToSmiles(mol, canonical=True)
             else:
-                return None
+                return smiles
         except:
-            return None
+            return smiles
 
     df[smiles_column] = df[smiles_column].apply(to_canonical)
     return df

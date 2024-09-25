@@ -20,6 +20,5 @@ default_output_dir : 'output'
 model_names : ['CatBoost', 'Lasso', 'LGBM', 'Neural Network','Random Forest', 'XGBoost'] 
 ## Filenames
 raw_data_filename : 'highresnps october 2023 consensus.csv'
-linking_filename : 'Modeling_Data.xlsx'
 smiles_dict_filename : 'smiles_dict.pkl'
 output_filename : 'NEW_HIGH_RES_2023_SMILES.csv'

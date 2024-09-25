@@ -36,7 +36,28 @@ data.drop_duplicates(subset=[model_index], inplace=True)
 print(data.shape)
 
 smiles_dict = smiles.load_smiles_dict(smiles_dict_filename)
-data['SMILES'] = data[model_index].apply(lambda x: smiles.get_smiles_with_url(x, smiles_dict, smiles_dict_filename))
+
+if smiles_dict != None:
+    # Function to check and replace values
+    def replace_values(row, value_dict):
+        key = row[model_index]
+        if key in value_dict:
+            if row['SMILES'] != value_dict[key]:
+                return value_dict[key]
+        return row['SMILES']
+
+    # Apply the function to replace values if needed
+    data['SMILES'] = data.apply(lambda row: replace_values(row, smiles_dict), axis=1)
+
+data['SMILES'] = data.apply(
+    lambda x: smiles.get_smiles_with_url(
+        x[model_index],  # The compound name (from model_index column)
+        smiles_dict,
+        smiles_dict_filename,
+        existing_value=x['SMILES']  # The existing value from the 'SMILES' column
+    ),
+    axis=1  # Apply the function row by row
+)
 print(data.head())
 
 # check canonical SMILES 
