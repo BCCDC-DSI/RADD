@@ -57,7 +57,7 @@ Data/
 *.xlsx
 
 # Pycache
-__pycache__
+*__pycache__
 
 # Images
 *.png
