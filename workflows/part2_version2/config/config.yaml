@@ -1,10 +1,10 @@
 # This config file hosts the variable names, lists and column identifiers for the nps script
 # Variable Names
 model_index : 'Name' # Sample ID ['Compound', 'Name']
-test_model_index : 'Compound'
+test_model_index : 'Compound' # The database to predict on 
 model_y : 'Retention Time (min)'  #['PTC Confirmed RT', 'Retention Time (min)']
-test_model_y : 'PTC Confirmed RT'
-model_X : 'SMILES'
+test_model_y : 'PTC Confirmed RT' # The database to predict on
+model_X : 'SMILES' # The SMILES String column
 # Column Names
 lab_column_name : 'LAB'
 
