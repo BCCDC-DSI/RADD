@@ -1,8 +1,8 @@
 # This config file hosts the variable names, lists and column identifiers for the nps script
 # Variable Names
-model_index : 'Compound' # Sample ID ['Name', 'Compound']
+model_index : 'Name' # Sample ID ['Compound', 'Name']
 test_model_index : 'Compound'
-model_y : 'Pmass'  #['PTC Confirmed RT', 'Retention Time (min)']
+model_y : 'Retention Time (min)'  #['PTC Confirmed RT', 'Retention Time (min)']
 test_model_y : 'PTC Confirmed RT'
 model_X : 'SMILES'
 # Column Names
@@ -19,6 +19,6 @@ linking_dir : 'output'
 default_output_dir : 'output'
 model_names : ['CatBoost', 'Lasso', 'LGBM', 'Neural Network','Random Forest', 'XGBoost'] 
 ## Filenames
-raw_data_filename : 'highresnps october 2023 consensus.csv'
+raw_data_filename : 'NEW_X500R_SMILES.csv'
 smiles_dict_filename : 'smiles_dict.pkl'
-output_filename : 'NEW_HIGH_RES_2023_SMILES.csv'
+output_filename : 'NEW_X500R_SMILES.csv'

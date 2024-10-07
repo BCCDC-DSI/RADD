@@ -48,13 +48,11 @@ model_X = config['model_X']
 # Directories
 working_dir = config['working_dir']
 raw_data_dir = config['raw_data_dir']
-linking_dir = config['linking_dir']
 output_dir = config['output_dir']
 default_output_dir = config['default_output_dir']
 
 # Filenames
 raw_data_filename = config['raw_data_filename']
-linking_filename = config['linking_filename']
 smiles_dict_filename = config['smiles_dict_filename']
 output_filename = config['output_filename']
 

@@ -12,9 +12,9 @@
 #SBATCH --partition=skylake            # Partition name
 
 # Define variables for file paths
-SCRIPT_PATH="/arc/project/st-ashapi01-1/git/RADD/workflows/part2_version2/train_test.py"
-OUTPUT_PATH="/scratch/st-ashapi01-1/RADD/SMILES_ML_PIPELINE/NPS_OUTPUT"
-DATA_PATH="/arc/project/st-ashapi01-1/git/RADD/workflows/part2_version2/Data/training_data_bccdc_20240708.csv"
+SCRIPT_PATH="/arc/project/st-ashapi01-1/git/afraz96/RADD/workflows/part2_version2/train_test.py"
+OUTPUT_PATH="/scratch/st-ashapi01-1/RADD/SMILES_ML_PIPELINE/X500R_OUTPUT"
+DATA_PATH="/arc/project/st-ashapi01-1/git/afraz96/RADD/workflows/part2_version2/Data/NEW_X500R_SMILES.csv"
 
 # Print the date and time
 echo "Job started at: $(date)"

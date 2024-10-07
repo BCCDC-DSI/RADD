@@ -111,6 +111,10 @@ class SMILESVectorizer:
         return one_hot[:, 0:-1, :], one_hot[:, 1:, :]
 
     def create_char_to_int(self, smiles):
+        """
+        This can be expanded for multi-character support - consider using str to replace cap strings then small ones
+        And then replace with $, ?, %
+        """
         char_to_int = {'l': 1, 'y': 2, '@': 3, '3': 4, 'H': 5, 'S': 6, 'F': 7, 'C': 8, 'r': 9, 's': 10, '/': 11, 'c': 12, 'o': 13,
        '+': 14, 'I': 15, '5': 16, '(': 17, '2': 18, ')': 19, '9': 20, 'i': 21, '#': 22, '6': 23, '8': 24, '4': 25, '=': 26,
        '1': 27, 'O': 28, '[': 29, 'D': 30, 'B': 31, ']': 32, 'N': 33, '7': 34, 'n': 35, '-': 36}
