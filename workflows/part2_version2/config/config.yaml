@@ -11,7 +11,7 @@ lab_column_name : 'LAB'
 ## Filepaths
 
 # Create Dataset
-working_dir : '/arc/project/st-ashapi01-1/git/RADD/workflows/part2_version2'
+working_dir : '/arc/project/st-ashapi01-1/git/afraz96/RADD/workflows/part2_version2'
 raw_data_dir : 'Data'
 output_dir : 'Data'
 linking_dir : 'output'

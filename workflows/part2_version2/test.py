@@ -53,7 +53,6 @@ model_y = config['model_y']
 model_X = config['model_X']
 
 # Directories
-working_dir = config['working_dir']
 raw_data_dir = config['raw_data_dir']
 output_dir = config['output_dir']
 default_output_dir = config['default_output_dir']

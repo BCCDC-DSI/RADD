@@ -16,7 +16,6 @@ with open('config/config.yaml') as f:
 
 model_index = config['model_index']
 model_y = config['model_y']
-working_dir = config['working_dir']
 raw_data_dir = config['raw_data_dir']
 raw_data_filename = config['raw_data_filename']
 smiles_dict_filename = config['smiles_dict_filename']
