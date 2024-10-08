@@ -1,0 +1,5 @@
+# Home Directory
+working_dir : 'O:/BCCDC/Groups/Data_Linked/BCC19C/Researcher/06_WG_SYND/p02_01_msp_geo_ml/a_external_data'
+data_dir : 'O:/BCCDC/Groups/Lab/2019-nCoV/BC Labs Surveillance Indicators/b_scripts/Reinfection/Manuscript/Data/Episode Reinfection Cohort Long_TC_09.csv'
+output_dir : 'U:/COVID Reinfection/covid_reinfection'
+model_names : [CatBoost, 'LGBM', 'Random Forest', 'XGBoost']

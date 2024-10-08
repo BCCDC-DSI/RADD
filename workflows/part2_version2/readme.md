@@ -1,37 +1,88 @@
 
-# Retention time predictor 
+# SMILES2Vec ML pipeline
 
-- Shared with Chris/ Afraz/ Lisa 2024-06-01
-- Courtesy of Dan Pasin (nps-rt-main) and some updated libraries 
+- Uses the Smiles2Vec repo available [here](https://github.com/Abdulk084/Smiles2vec)
+- Standard ML regression pipeline battery (to see models used please review `config/config.yaml`)
 
-## Libraries
+## Setup
 
-- Combined
-- FBS_RT
-- higresnps october 2023 consensus
-- NPS
-- NPS DB 240214
-- THERMO DB-NOV2022
-- ```Training_Database_with_fbs_rt.csv``` (last line at 10059)
+If you are using Anaconda, we recommend creating a blank environment with the following command:
 
-Compound Name	| Workflow | Associated Target Peak | 	MS Order	| Precursor m/z	|  Product m/z| 	m/z	| Height Threshold	| Area Threshold |  Collision Energy	| Modification	| Lens | 	Energy Ramp | 	Ion Coelution| 	Ratio Window	| Target Ratio	| Window Type | PeakPolarity	| Adduct	| Charge State	| ~~Retention Time~~ | 	Retention Time Window	| Integration Strategy| 	Compound	| **PTC Confirmed RT**
+```
+conda create --name raddpt2 python=3.9
+```
 
-> Note that for training the retention time predictor, we only want to use retention times that have been confirmed at PTC. Please use ```Training_Database_with_fbs_rt.csv``` column Y (PTC Confirmed RT) only. You can ignore column U (Retention Time)
+When this <blank> environment is ready you can activate it through:
+
+```
+conda activate raddpt2
+```
+
+Then your terminal should have something like:
+
+```
+(raddpt2) User> 
+```
+
+You should be equipped to install all the dependencies under the `requirements.txt` file:
+
+```
+pip install -r requirements.txt
+```
 
 
-<BR><BR><BR><BR>
+## Usage
 
-## Other data in the ```rt-predictor``` folder
+The ML pipeline is setup in 3 stages:
 
-- Fields in ```Prediction Data.csv``` (n=2329)
- 
-| Compound | DrugClass| InChIKey| InChIKeyShort | SMILES | logD | logP | nO | nC | 
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| (Iso)butyryl-F-fentanyl N-benzyl analogue  |Opioids  | XNQGKYHSTDKIKG-UHFFFAOYSA-N  | XNQGKYHSTDKIKG  |  (C1=CC=CC=C1)N1CCC(CC1)N(C(C(C)C)=O)C1=CC=C(C=C1)F  | 0.717182  | 4.4793  | 1  | 22 | 
+1) Create the Data used
+2) Train the models
+3) Analyse the results
+
+It is important to understand how each of these sections works:
+
+### Data creation
+
+We make use of the `create_dataset.py` file. To use this file you will need to modify the config file found under: `workflows/part2_version2/config/config.yaml` (also available [here](https://github.com/BCCDC-DSI/RADD/blob/pt2/workflows/part2_version2/config/config.yaml))
+
+Then to create the dataset used in the analysis:
+
+```
+python create_dataset.py
+```
+
+Note: the output is sent to the folder specified in the config file.
 
 
-- Fields in ```Modeling Data``` (n=4770)
+### Train the models
 
-| Lab | Compound | RT | DrugClass| InChIKey| InChIKeyShort | SMILES | logD | logP | nO | nC | 
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| Aarhus |1B-LSD |5.55 |Indolalkylamines |SVRFNPSJPIDUBC-DYESRHJHSA-N | SVRFNPSJPIDUBC  | C(CCC)(=O)N1C=C2C[C@H]3N(C[C@@H] | C=C3C=3C=CC=C1C32)C(=O)N(CC)CC)C  |-0.70648  | 3.8197 | 2 |24 | 
+To do this step we have created a shell script:
+
+```
+./smiles_job_submitter.sh
+```
+To change the datasets used modify the file paths to `OUTPUT_PATH` and `DATA_PATH`. Note that this step will not work unless the dataset is created correctly in the previous section.
+
+### Analyse the results
+
+There are various items in this repo that can be used for analysis. We recommend using the python script: `generate_model_stats.py` - this can analyse how one database can predict on another. To assist in automating this on Sockeye we have created a shell script:
+
+```
+./create_error_tables.sh
+```
+
+It is important to mention that the `TEST_DATA_PATH` denotes the data that the `DATA_PATH` models predict on. Unfortunately, due to the current structure of the pipeline, you need to manually also modify the `config.yaml` file and in particular the following params:
+
+```
+model_index : 'Compound' # Sample ID ['Name', 'Compound']
+test_model_index : 'Compound'
+model_y : 'Retention Time (min)'  #['PTC Confirmed RT', 'Retention Time (min)']
+test_model_y : 'PTC Confirmed RT'
+model_X : 'SMILES'
+```
+
+You will need to switch them around depending on which way you are analysing. The example above is using X500R on the BCCDC dataset.
+
+
+Alternatively, under `Notebooks/` there is an easy to follow guide which can leverage any of the trained models and predict on the `High Res` dataset. This notebook can be easily expanded as the functions are reasonably dynamic for the `SMILES2Vec` approach. 
+
