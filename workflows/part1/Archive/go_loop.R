@@ -45,16 +45,20 @@ if (length(args)>1) # Excecuted in an offline SLURM job
 
 
 # =================== database read 
-db1 = read.csv(db_filename, skip = 5)
+db1 = read.csv(db_filename, skip = 5) # colClasses=c('numeric','numeric') )
 
 print( 'Inspect the database closely; any numeric values enclosed with quotes??? sign of problem later!')
+
+if (1){
+d=3; db1[,d] <- as.numeric(db1[,d])
+d=7; db1[,d] <- as.numeric(db1[,d])
+d=21; db1[,d] <- as.numeric(db1[,d])
+d=22; db1[,d] <- as.numeric(db1[,d])
+}
+
 print(  t(head(db1,1)) )
-print( '\n\n' )
+cat( '\n\nRunning copy under:\n\t/arc/project/st-ashapi01-1/git/ywtang/RADD/workflows/part1/go_loop.R\n\n\n' )
 
-
-
-
-db1[,7] = as.numeric(db1[,7])
 # db1[,5] = as.numeric(db1[,5])  # uncomment if runs into err
 
 # ================== output subfolder path
@@ -79,6 +83,7 @@ if ( NFOLDS > 1) {
 }
 
 
+cat('Will not check for Compound.Name when defining database variable 2024-08-02')
 
 i=-1
 for (filename in FILES)
@@ -131,11 +136,12 @@ for (filename in FILES)
       # filter to MS1/MS2 rows only
       map(~ {
         db = .x
-        stop_at = which(db$Compound.Name == "") %>% head(1)
-        db %<>% extract(seq_len(stop_at), )
+        #stop_at = which(db$Compound.Name == "") %>% head(1)
+        #db %<>% extract(seq_len(stop_at), )
         keep = map_lgl(db, ~ n_distinct(.x) > 1)
         db %<>% extract(, keep)
       })
+
   
     # function to calculate ppm boundary
     calc_ppm_range = function(theor_mass, err_ppm = 10.0) {
@@ -149,7 +155,7 @@ for (filename in FILES)
     # iterate through compounds
     compounds = unique(databases$NPS$Compound.Name) %>% na.omit()
     ## remove one compound already in the Thermo database
-    compounds %<>% setdiff(c('', 'Norfluorodiazepam'))
+    # compounds %<>% setdiff(c('', 'Norfluorodiazepam'))
     
    
     results = map(seq_along(compounds), ~ {
@@ -163,8 +169,8 @@ for (filename in FILES)
       fragments = filter(compound, Workflow == 'Fragment')
       mz_range = calc_ppm_range( as.numeric(parent$m.z), err_ppm = 10)
       ## do not filter based on RT for now
-      # rt_range = with(parent, c(Retention.Time - Retention.Time.Window,
-      #                           Retention.Time + Retention.Time.Window))
+      rt_range = with(parent, c(Retention.Time - Retention.Time.Window,
+                                Retention.Time + Retention.Time.Window))
   
       # find spectra that match parent properties
       ms1_match = map_lgl(seq_along(spectra), ~ {
@@ -172,7 +178,7 @@ for (filename in FILES)
 	if (0) { message('Threshold', parent$Height.Threshold, 'at row:', .x ) }
         # print( paste0( 'precursor:', dim( precursorMz(spectrum) )) )
         between(precursorMz(spectrum)[1], mz_range[1], mz_range[2]) &
-          ## between(rtime(spectrum), rt_range[1], rt_range[2]) &
+        between(rtime(spectrum), rt_range[1], rt_range[2]) &
           precursorIntensity(spectrum) >= parent$Height.Threshold[1]   # <---- need to change still? 
       })
   

@@ -1,28 +1,32 @@
+#
+#
+# Install pacman for purpose of adding arguments
 
-<<<<<<< HEAD
-# install pacman for purpose of adding arguments
-=======
+cat('Starting R')
 
-
-
-
->>>>>>> ab60e273813097508ec2a5cbed3cbf1557bfd8fa
-install.packages( 'pacman', repos = "http://cran.us.r-project.org" )
+install.packages( 'pacman', repos='http://cran.us.r-project.org' )
 library('pacman')
 p_load('argparse')
 args = commandArgs(trailingOnly=TRUE)
 
-if (args[1] == 1) 
+if (exists('folder'))
 {
-	folder = 'data_highresnps' 
+  cat('folder already defined')	
 } else {
-	folder = 'data_2024nps-db'
+  folder=args[1] 
 }
+cat( 'Processing folder', folder )
 
-files = list.files( paste0('/scratch/st-ashapi01-1/rds_files/', folder), pattern = "*.rds", full.names = TRUE )
+files = list.files( paste0(folder), pattern = "*.rds", full.names = TRUE )
 
 for (file in files)
 {
+  pref = tools::file_path_sans_ext(basename(file))
+
+  if (file.exists( paste0( folder, pref, '_ms1.csv') ) )
+  {
+  } else {
+
   dat <- readRDS(file)
 
   f1 = list()
@@ -43,8 +47,8 @@ for (file in files)
   b5 = list()
   b6 = list()
   b7 = list()
+  b8 = list()
 
-  pref = tools::file_path_sans_ext(basename(file))
 
   for (n in names(dat$ms1_matches))
   {    
@@ -73,7 +77,7 @@ for (file in files)
       c2=c(c2, dat$ms1_matches[[n]]$ms2$m.z ) # constant
       c3=c(c3, dat$ms1_matches[[n]]$ms2$mz )  # varying
       c4=c(c4, dat$ms1_matches[[n]]$ms2$i )
-      #c5=c(c5, dat$ms1_matches[[n]]$ms2$spectrum )
+      c5=c(c5, dat$ms1_matches[[n]]$ms2$spectrum )
         
       ms2= dat$ms1_matches[[n]]$ms2
       ms1= dat$ms1_matches[[n]]$ms1
@@ -96,21 +100,23 @@ for (file in files)
     df1=cbind( t(data.frame(f1)), t(data.frame(b1)), t(data.frame(b8)), t(data.frame(b6)), t(data.frame(b7)), t(data.frame(b2)), t(data.frame(b3)), t(data.frame(b4)), t(data.frame(b5)) )
     colnames(df1) = c('filename', 'compound_name', 'spectrum',  'Retention.Time', 'Retension.TimeWindow', 'm.z', 'mz', 'rt', 'intens')
 
-    df2=cbind( t(data.frame(f2)), t(data.frame(c1)), t(data.frame(c2)), t(data.frame(c3)), t(data.frame(c4)) )
-    colnames(df2) = c('filename','compound_name',  'm.z', 'mz', 'i')
+    df2=cbind( t(data.frame(f2)), t(data.frame(c1)), t(data.frame(c5)), t(data.frame(c2)), t(data.frame(c3)), t(data.frame(c4)) )
+    colnames(df2) = c('filename','compound_name', 'spectrum', 'm.z', 'mz', 'i')
 
-    print(cat( 'ms1:', dim(df1), 'ms2:', dim(df2)) )
+    print( paste( 'File', pref,'has compound', n, '| $ms1 has', r1, 'rows | $ms2 has', r2, 'rows') )
 
-    out1 = paste0('/scratch/st-ashapi01-1/rds_files/', folder, '/ms1/')
-    out2 = paste0('/scratch/st-ashapi01-1/rds_files/', folder, '/ms2/')
+    #out1 = paste0( folder, '/ms1/')
+    #out2 = paste0( folder, '/ms2/')
 
-    write.csv( df1, paste0( out1, pref, '_ms1.csv'), row.names=F )
-    write.csv( df2, paste0( out2, pref, '_ms2.csv'), row.names=F )
+    write.csv( df1, paste0( folder, pref, '_ms1.csv'), row.names=F )
+    write.csv( df2, paste0( folder, pref, '_ms2.csv'), row.names=F )
   }
   else
   {
-    print( cat(pref, 'has no matching results found in RDS'))
+    print( paste(pref, 'has no matching results found in RDS') )
   }
-}
+
+} # else
+} # loop
 
 
