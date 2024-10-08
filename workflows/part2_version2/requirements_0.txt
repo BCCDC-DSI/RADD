@@ -1,6 +1,9 @@
+rdkit # AK updated 2024-06-20
 scikit-learn==1.2.2
 scipy==1.11.1
 seaborn==0.12.2
 tensorboard==2.12.3
 tensorboard-data-server==0.7.1
 tensorflow==2.12.0
+openpyxl
+pyyaml==6.0.1 # LT updated 2024-06-18  

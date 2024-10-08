@@ -11,8 +11,15 @@ from tkinter import Tk, filedialog # for the file open and save dialog graphical
 from pathlib import Path
 
 from models import OneHotANN
+import yaml
 
 user = getpass.getuser()
+
+with open('config/config.yaml') as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
+
+# Load in the column names
+lab_column_name = config['lab_column_name']
 
 file_path = os.path.dirname(__file__)
 os.chdir(file_path)
@@ -141,12 +148,12 @@ os.makedirs(results_dir, exist_ok = True)
 #%%
 
 ##############################
+descriptors = config['descriptors']
 
-descriptors = ['logD', 'logP', 'nO', 'nC']
-labs = modelling_data['LAB'].unique()
+labs = modelling_data[lab_column_name].unique()
 
-model = OneHotANN(dataset = modelling_data, index = 'Compound', X=descriptors, y='RT', 
-                  one_hot = ['LAB', 'DrugClass'], max_layers = 2, interval = 10,
+model = OneHotANN(dataset = modelling_data, index = config['model_index'], X=descriptors, y=config['model_y'], 
+                  one_hot = config['model_ohe'], max_layers = 2, interval = 10,
                   min_nodes = 50, max_nodes=200, iterations=5)
         
 ###############################
