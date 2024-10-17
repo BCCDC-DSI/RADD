@@ -1,0 +1,23 @@
+# This config file hosts the variable names, lists and column identifiers for the nps script
+# Variable Names
+model_index : 'Name' # Sample ID ['Compound', 'Name']
+test_model_index : 'Compound' # The database to predict on 
+model_y : 'Retention Time (min)'  #['PTC Confirmed RT', 'Retention Time (min)']
+test_model_y : 'PTC Confirmed RT' # The database to predict on
+model_X : 'SMILES' # The SMILES String column
+# Column Names
+lab_column_name : 'LAB'
+
+## Filepaths
+
+# Create Dataset
+raw_data_dir : 'Data'
+output_dir : 'Data'
+linking_dir : 'output'
+# ML pipeline
+default_output_dir : 'output'
+model_names : ['CatBoost', 'Lasso', 'LGBM', 'Neural Network','Random Forest', 'XGBoost'] 
+## Filenames
+raw_data_filename : 'NEW_X500R_SMILES.csv'
+smiles_dict_filename : 'smiles_dict.pkl'
+output_filename : 'NEW_X500R_SMILES.csv'
