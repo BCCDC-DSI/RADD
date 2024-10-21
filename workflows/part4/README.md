@@ -1,4 +1,4 @@
-# COVID Reinfection ML Pipeline
+# Part 4
 
 This repository houses the software produced for the COVID reinfection pipeline. There is some setup required and then some points surrounding usage. Please read this README to run the Machine Learning Pipeline, if there are issues please raise an issue on this GitHub repository or send an email to afraz.khan@bccdc.ca
 
