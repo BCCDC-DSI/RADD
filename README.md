@@ -20,5 +20,12 @@ The part 2 README can be found [here](https://github.com/BCCDC-DSI/RADD/blob/mai
 
 ## Part 4
 
+Coming soon...
+
+
+<hr>
+
+Further details can be found on the ongoing [slide deck](https://docs.google.com/presentation/d/1EoPfQdC32cnRHPE95FKA8puVm2C3zmvNykvNYOYzaO8/)
+
 ## Acknowledgements 
  
