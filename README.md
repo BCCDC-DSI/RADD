@@ -12,9 +12,11 @@ The part 1 README can be found [here](https://github.com/BCCDC-DSI/RADD/blob/mai
 
 ## Part 2
 
-The part 2 README can be found [here](https://github.com/BCCDC-DSI/RADD/blob/main/workflows/part2_version2/readme.md)
+The part 2 README can be found [here](https://github.com/BCCDC-DSI/RADD/blob/main/workflows/part2/readme.md)
 
 ## Part 3
+
+The part 2 README can be found [here](https://github.com/BCCDC-DSI/RADD/blob/main/workflows/part3/)
 
 ## Part 4
 
