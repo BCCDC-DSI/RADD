@@ -43,7 +43,7 @@ It is important to understand how each of these sections works:
 
 ### Data creation
 
-We make use of the `create_dataset.py` file. To use this file you will need to modify the config file found under: `workflows/part2_version2/config/config.yaml` (also available [here](https://github.com/BCCDC-DSI/RADD/blob/pt2/workflows/part2/config/config.yaml))
+We make use of the `create_dataset.py` file. To use this file you will need to modify the config file found under: `workflows/part2/config/config.yaml` (also available [here](https://github.com/BCCDC-DSI/RADD/blob/pt2/workflows/part2/config/config.yaml))
 
 Then to create the dataset used in the analysis:
 
