@@ -1,4 +1,4 @@
-catboost==1.2.5
+catboost==1.2.7   
 lightgbm==4.4.0
 openpyxl==3.1.4
 pubchempy==1.0.4
@@ -12,4 +12,5 @@ tensorboard==2.12.3
 tensorboard-data-server==0.7.1
 tensorflow==2.12.0
 xgboost==2.1.0
-# copied from version checked by AK and LT 7th Oct, 2024
+pymzml==2.5.10
+# 2024-11-04: upgraded catboost to 1.2.7 from 1.2.5 + added pymzml
