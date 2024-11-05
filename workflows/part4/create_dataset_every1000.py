@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import pymzml
 import os
+from tqdm import tqdm
 
 # Function to process each mzML file and extract relevant m/z data
 def process_mzml_file(year, filename, relevant_mz_values, compound_name):
@@ -79,21 +80,23 @@ for year in [ int(sys.argv[1]) ]:
                     continue
 
                 # Filter for matching row
-                prediction_row = prediction_df[prediction_df['file_name'] == base_filename]
-                if prediction_row.empty:
+                prediction_rows = prediction_df[prediction_df['file_name'] == base_filename]
+                if prediction_rows.empty:
                     extra_files_count += 1
                     continue  # Skip to the next file if no match is found
 
                 # Extract compound name and process file if it's in prediction_df
-                prediction_row = prediction_row.iloc[0]
-                compound_name = prediction_row['drug']
-                relevant_mz_values = file2_filtered[file2_filtered['Compound Name'] == compound_name]['m/z'].values
-
-                # Process the mzML file and extract relevant data
-                extracted_data = process_mzml_file(year, base_filename, relevant_mz_values, compound_name)
-
-                extracted_data.to_csv( os.path.join(  job_outdir, f'{base_filename}.csv'), index=False)
-                print( i, end=' ', flush=True ) # for progress update
+                for row in tqdm( range(prediction_rows.shape[0]) ):
+                    prediction_row = prediction_rows.iloc[row,: ]
+                    compound_name = prediction_row['drug']
+                    y = prediction_row['detection_status']
+                    relevant_mz_values = file2_filtered[file2_filtered['Compound Name'] == compound_name]['m/z'].values
+    
+                    # Process the mzML file and extract relevant data
+                    e = process_mzml_file(year, base_filename, relevant_mz_values, compound_name)
+                    e.to_csv( os.path.join(  job_outdir, f'{base_filename}_{compound_name}_{y}.csv'), index=False)                
+                    print( i, e.shape[0], end=' ', flush=True ) # for progress update
+                    
                 if 0:#extracted_data is not None:
                     try:
                         all_data.append(extracted_data)
