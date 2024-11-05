@@ -1,5 +1,65 @@
+import pandas as pd
+import numpy as np
+import pymzml
+import os
 
-# Process each filename in the mzML directory by iterating over years
+# Function to process each mzML file and extract relevant m/z data
+def process_mzml_file(year, filename, relevant_mz_values, compound_name):
+    file_path = os.path.join(mzml_dir, year, f"{filename}.mzML")
+    data = []
+
+    if not os.path.isfile(file_path):
+        print(f"File {file_path} not found.")
+        return pd.DataFrame(data, columns=['Compound Name', 'Spectrum_ID', 'Retention_Time', 'Transformed mass with error', 'm/z', 'Intensity'])
+
+    # Read mzML file
+    run = pymzml.run.Reader(file_path)
+    for spectrum in run:
+        if spectrum.ms_level == 1:  # Only process MS1 spectra
+            retention_time = spectrum.scan_time_in_minutes()
+            spectrum_id = spectrum.ID
+            transformed_mass_with_error = spectrum.transformed_mz_with_error
+
+            # Extract only relevant m/z peaks
+            for mz, intensity in spectrum.peaks('raw'):
+                if any(abs(mz - target_mz) < 0.01 for target_mz in relevant_mz_values):  # tolerance set to 0.01
+                    data.append([compound_name, spectrum_id, retention_time, transformed_mass_with_error, mz, intensity])
+
+    # Return as DataFrame
+    return pd.DataFrame(data, columns=['Compound Name', 'Spectrum_ID', 'Retention_Time', 'Transformed mass with error', 'm/z', 'Intensity'])
+
+project_folder = '/arc/project/st-ashapi01-1/git/afraz96/RADD/workflows/part4'
+
+data_dir = 'Data'
+db_filename = 'ms_library_20241011.csv'
+prediction_filename = 'validity_data_summary_20241011.xlsx'
+
+db_df = pd.read_csv(os.path.join(project_folder, data_dir, db_filename), skiprows=5)
+prediction_df = pd.read_excel(os.path.join(project_folder, data_dir, prediction_filename))
+
+import re
+# Clean up 'Compound Name' in file1_df
+prediction_df['drug'] = prediction_df['drug'].str.lower().replace(r'[^a-z0-9]', '', regex=True).str.strip()
+
+# Clean up 'Compound Name' in file2_df
+db_df['Compound Name'] = db_df['Compound Name'].str.lower().replace(r'[^a-z0-9]', '', regex=True).str.strip()
+
+# Step 2: Filter File 2 based on Compounds from File 1
+compounds_from_file1 = prediction_df['drug'].unique()
+file2_filtered = db_df[db_df['Compound Name'].isin(compounds_from_file1)]
+# Create a set of filenames from prediction_df without extensions
+prediction_filenames = set(prediction_df['file_name'].str.replace('.mzml', '', regex=False))
+prediction_df['file_name'] = prediction_df['file_name'].str.replace('.mzml', '')    
+# Main processing loop for each file in prediction_df
+all_data = []
+extra_files_count = 0
+total_files_count = 0
+mz_values_from_file2 = file2_filtered['m/z'].unique()
+
+# Specify the path to your mzML file
+mzml_dir = '/arc/project/st-ashapi01-1/bccs_mzml'
+years = ['2020', '2021', '2022', '2023', '2024']
+
 # Process each filename in the mzML directory by iterating over years
 for year in years:
     year_dir = os.path.join(mzml_dir, year)
