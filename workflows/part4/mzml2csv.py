@@ -66,7 +66,7 @@ mz_values_from_file2 = file2_filtered['m/z'].unique()
 # Specify the path to your mzML file
 mzml_dir = '/arc/project/st-ashapi01-1/bccs_mzml'
 try:
-    years = np.int8( sys.argv[1] )  
+    years = [np.int8( sys.argv[1] )]  
 except:
     years = [ 20,21,22,23,24]
 
