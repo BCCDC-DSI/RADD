@@ -1,4 +1,4 @@
-
+import re
 import pandas as pd
 import numpy as np
 import pymzml
@@ -39,7 +39,7 @@ prediction_filename = 'validity_data_summary_20241011.xlsx'
 db_df = pd.read_csv(os.path.join(project_folder, data_dir, db_filename), skiprows=5)
 prediction_df = pd.read_excel(os.path.join(project_folder, data_dir, prediction_filename),  engine='openpyxl')
 
-import re
+
 # Clean up 'Compound Name' in file1_df
 prediction_df['drug'] = prediction_df['drug'].str.lower().replace(r'[^a-z0-9]', '', regex=True).str.strip()
 
@@ -60,14 +60,16 @@ mz_values_from_file2 = file2_filtered['m/z'].unique()
 
 # Specify the path to your mzML file
 mzml_dir = '/arc/project/st-ashapi01-1/bccs_mzml'
-years = ['2020', '2021', '2022', '2023', '2024']
+years = int(sys.argv[1]) #, '2021', '2022', '2023', '2024']
 
 # Process each filename in the mzML directory by iterating over years
 for year in years:
     year_dir = os.path.join(mzml_dir, year)
     if os.path.isdir(year_dir):
-        for i, filename in enumerate( os.listdir(year_dir) ):
-            if filename.endswith('.mzML'):
+        L= os.listdir(year_dir)  
+        print( len(L), 'files for year', year )
+        for i, filename in enumerate( L ):
+            if i>6 & filename.endswith('.mzML'):
                 total_files_count += 1
                 base_filename = filename.replace('.mzML', '')  # Strip extension
 
@@ -89,15 +91,19 @@ for year in years:
 
                 # Process the mzML file and extract relevant data
                 extracted_data = process_mzml_file(year, base_filename, relevant_mz_values, compound_name)
-                if extracted_data is not None:
-                    all_data.append(extracted_data)
-                    print(all_data)
 
-                if (i % 1000 )==0:
+                extracted_data.to_csv( os.path.join(  job_outdir, f'{base_filename}.csv'), index=False)
+                print( i, end=' ', flush=True )
+                if 0:#extracted_data is not None:
+                    try:
+                        all_data.append(extracted_data)
+                    except Exception as e:
+                        print(e)                
+                        
+                if 0:#(i % 100 )==99:
                     print( 'saving after processing', i, 'for', year )
                     final_df = pd.concat(all_data, ignore_index=True) if all_data else pd.DataFrame()
                     final_df.to_csv(os.path.join( job_outdir, 'filtered_mzml_data.csv'), index=False)
-
 
 # Combine all extracted data into a single DataFrame
 final_df = pd.concat(all_data, ignore_index=True) if all_data else pd.DataFrame()
