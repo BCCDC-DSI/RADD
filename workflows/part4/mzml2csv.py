@@ -74,7 +74,8 @@ print( '\n\nInput argument:', years )
 
 # Process each filename in the mzML directory by iterating over years
 for year in years:
-    year_dir = os.path.join(mzml_dir, '%s'%(2000 + year) )
+    yr_str = '%s'%(2000 + year) 
+    year_dir = os.path.join(mzml_dir, yr_str )
     if os.path.isdir(year_dir):
         L= os.listdir(year_dir)  
         print( len(L), 'files for year', year )
@@ -104,7 +105,7 @@ for year in years:
                     relevant_mz_values = file2_filtered[file2_filtered['Compound Name'] == compound_name]['m/z'].values
     
                     # Process the mzML file and extract relevant data
-                    e = process_mzml_file(year, base_filename, relevant_mz_values, compound_name)
+                    e = process_mzml_file( yr_str , base_filename, relevant_mz_values, compound_name)
                     e.to_csv( os.path.join(  job_outdir, f'{base_filename}_{compound_name}_{y}.csv'), index=False)                
                     print( i, e.shape[0], end=' ', flush=True ) # for progress update
                     
