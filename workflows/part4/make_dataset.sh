@@ -19,11 +19,12 @@ echo "Job started at: $(date)"
 #conda activate /home/ywtang/miniconda3/envs/chemenv
 
 ##activate VE
+module load intel-oneapi-compilers/2023.1.0 python/3.11.6
 ODIR=/scratch/st-ashapi01-1/
 source ${ODIR}/raddpt4/bin/activate
 
 ## Run the Python script with specified arguments
-SCRIPT_PATH=/arc/project/st-ashapi01-1/git_ssh/ywtang/RADD/workflows/part4/create_dataset_every1000.py
+SCRIPT_PATH=/arc/project/st-ashapi01-1/git_ssh/ywtang/RADD/workflows/part4/mzml2csv.py
 python $SCRIPT_PATH ${SLURM_ARRAY_TASK_ID}
 
 ## Print the date and time
