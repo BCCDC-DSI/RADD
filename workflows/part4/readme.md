@@ -1,4 +1,15 @@
 
+```
+module load intel-oneapi-compilers/2023.1.0 python/3.11.6
+ODIR=/scratch/st-ashapi01-1/
+python -m venv ${ODIR}/raddpt4
+source ${ODIR}/raddpt4/bin/activate
+pip3 install -r requirements.txt
+```
+
+<details> 
+
+<summary></summary>
 As of 2024-11-04, the number of samples by year:  
 ```
 819 files for year 2020
@@ -15,3 +26,5 @@ As of 2024-11-04, the number of samples by year:
 2023: most searched for 25 compounds
 2024: most searched for 25 compounds
 ```
+
+</details>
