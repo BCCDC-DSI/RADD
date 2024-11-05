@@ -96,7 +96,7 @@ for year in years:
                 for row in tqdm( range(prediction_rows.shape[0]) ):
                     prediction_row = prediction_rows.iloc[row,: ]
                     compound_name = prediction_row['drug']
-                    y = prediction_row['detection_status']
+                    y = prediction_row['detection_status'] == 'detected'
                     relevant_mz_values = file2_filtered[file2_filtered['Compound Name'] == compound_name]['m/z'].values
     
                     # Process the mzML file and extract relevant data
