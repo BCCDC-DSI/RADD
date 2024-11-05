@@ -61,10 +61,15 @@ mz_values_from_file2 = file2_filtered['m/z'].unique()
 
 # Specify the path to your mzML file
 mzml_dir = '/arc/project/st-ashapi01-1/bccs_mzml'
-years = [ '2021', '2022', '2023', '2024']
+try:
+    years = sys.argv[1] # string to append to folder path
+except:
+    years = [ '2020', '2021', '2022', '2023', '2024']
+
+print( '\n\nInput argument:', years )
 
 # Process each filename in the mzML directory by iterating over years
-for year in [ int(sys.argv[1]) ]:
+for year in years:
     year_dir = os.path.join(mzml_dir, year)
     if os.path.isdir(year_dir):
         L= os.listdir(year_dir)  
@@ -85,6 +90,8 @@ for year in [ int(sys.argv[1]) ]:
                     extra_files_count += 1
                     continue  # Skip to the next file if no match is found
 
+                if prediction_rows.shape[0] != 21:
+                    print( i, prediction_rows.shape[0] )
                 # Extract compound name and process file if it's in prediction_df
                 for row in tqdm( range(prediction_rows.shape[0]) ):
                     prediction_row = prediction_rows.iloc[row,: ]
