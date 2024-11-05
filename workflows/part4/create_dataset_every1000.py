@@ -30,8 +30,9 @@ def process_mzml_file(year, filename, relevant_mz_values, compound_name):
     return pd.DataFrame(data, columns=['Compound Name', 'Spectrum_ID', 'Retention_Time', 'Transformed mass with error', 'm/z', 'Intensity'])
 
 project_folder = '/arc/project/st-ashapi01-1/git/afraz96/RADD/workflows/part4'
-
 data_dir = 'Data'
+job_outdir = "/scratch/st-ashapi01-1/part4_data"
+
 db_filename = 'ms_library_20241011.csv'
 prediction_filename = 'validity_data_summary_20241011.xlsx'
 
@@ -95,7 +96,7 @@ for year in years:
                 if (i % 1000 )==0:
                     print( 'saving after processing', i, 'for', year )
                     final_df = pd.concat(all_data, ignore_index=True) if all_data else pd.DataFrame()
-                    final_df.to_csv(os.path.join(project_folder, data_dir, 'filtered_mzml_data.csv'), index=False)
+                    final_df.to_csv(os.path.join( job_outdir, 'filtered_mzml_data.csv'), index=False)
 
 
 # Combine all extracted data into a single DataFrame
@@ -108,5 +109,5 @@ print(f"Extra files not found in prediction_df: {extra_files_count}")
 print(f"Extra file ratio: {extra_file_ratio:.2%}")
 
 # Save or link final_df with prediction_df as needed
-final_df.to_csv(os.path.join(project_folder, data_dir, 'filtered_mzml_data.csv'), index=False)
+final_df.to_csv(os.path.join( job_outdir, 'filtered_mzml_data.csv'), index=False)
 print("Data successfully extracted and saved to filtered_mzml_data.csv")
