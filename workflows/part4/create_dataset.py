@@ -32,7 +32,7 @@ for year in years:
                     print(all_data)
 
                 if (i % 1000 )==0:
-                    print( 'saving after processing', i )   
+                    print( 'saving after processing', i, 'for', year )   
                     final_df = pd.concat(all_data, ignore_index=True) if all_data else pd.DataFrame()
                     final_df.to_csv(os.path.join(project_folder, data_dir, 'filtered_mzml_data.csv'), index=False)
 
