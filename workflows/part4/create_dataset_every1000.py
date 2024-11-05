@@ -60,16 +60,16 @@ mz_values_from_file2 = file2_filtered['m/z'].unique()
 
 # Specify the path to your mzML file
 mzml_dir = '/arc/project/st-ashapi01-1/bccs_mzml'
-years = int(sys.argv[1]) #, '2021', '2022', '2023', '2024']
+years = [ '2021', '2022', '2023', '2024']
 
 # Process each filename in the mzML directory by iterating over years
-for year in years:
+for year in [ int(sys.argv[1]) ]:
     year_dir = os.path.join(mzml_dir, year)
     if os.path.isdir(year_dir):
         L= os.listdir(year_dir)  
         print( len(L), 'files for year', year )
         for i, filename in enumerate( L ):
-            if i>6 & filename.endswith('.mzML'):
+            if filename.endswith('.mzML'):
                 total_files_count += 1
                 base_filename = filename.replace('.mzML', '')  # Strip extension
 
@@ -93,7 +93,7 @@ for year in years:
                 extracted_data = process_mzml_file(year, base_filename, relevant_mz_values, compound_name)
 
                 extracted_data.to_csv( os.path.join(  job_outdir, f'{base_filename}.csv'), index=False)
-                print( i, end=' ', flush=True )
+                print( i, end=' ', flush=True ) # for progress update
                 if 0:#extracted_data is not None:
                     try:
                         all_data.append(extracted_data)
@@ -105,15 +105,16 @@ for year in years:
                     final_df = pd.concat(all_data, ignore_index=True) if all_data else pd.DataFrame()
                     final_df.to_csv(os.path.join( job_outdir, 'filtered_mzml_data.csv'), index=False)
 
-# Combine all extracted data into a single DataFrame
-final_df = pd.concat(all_data, ignore_index=True) if all_data else pd.DataFrame()
-
-# Calculate and print the extra file ratio
-extra_file_ratio = extra_files_count / total_files_count if total_files_count > 0 else 0
-print(f"Total mzML files in directory: {total_files_count}")
-print(f"Extra files not found in prediction_df: {extra_files_count}")
-print(f"Extra file ratio: {extra_file_ratio:.2%}")
-
-# Save or link final_df with prediction_df as needed
-final_df.to_csv(os.path.join( job_outdir, 'filtered_mzml_data.csv'), index=False)
-print("Data successfully extracted and saved to filtered_mzml_data.csv")
+if 0:
+    # Combine all extracted data into a single DataFrame
+    final_df = pd.concat(all_data, ignore_index=True) if all_data else pd.DataFrame()
+    
+    # Calculate and print the extra file ratio
+    extra_file_ratio = extra_files_count / total_files_count if total_files_count > 0 else 0
+    print(f"Total mzML files in directory: {total_files_count}")
+    print(f"Extra files not found in prediction_df: {extra_files_count}")
+    print(f"Extra file ratio: {extra_file_ratio:.2%}")
+    
+    # Save or link final_df with prediction_df as needed
+    final_df.to_csv(os.path.join( job_outdir, 'filtered_mzml_data.csv'), index=False)
+    print("Data successfully extracted and saved to filtered_mzml_data.csv")
