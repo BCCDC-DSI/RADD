@@ -62,7 +62,7 @@ mz_values_from_file2 = file2_filtered['m/z'].unique()
 # Specify the path to your mzML file
 mzml_dir = '/arc/project/st-ashapi01-1/bccs_mzml'
 try:
-    years = sys.argv[1] # string to append to folder path
+    years = int(sys.argv[1]) 
 except:
     years = [ '2020', '2021', '2022', '2023', '2024']
 
@@ -70,7 +70,7 @@ print( '\n\nInput argument:', years )
 
 # Process each filename in the mzML directory by iterating over years
 for year in years:
-    year_dir = os.path.join(mzml_dir, year)
+    year_dir = os.path.join(mzml_dir, '%s'%(2000 + year) )
     if os.path.isdir(year_dir):
         L= os.listdir(year_dir)  
         print( len(L), 'files for year', year )
