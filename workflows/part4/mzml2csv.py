@@ -17,6 +17,7 @@ def process_mzml_file(year, filename, relevant_mz_values, compound_name):
     # Read mzML file
     run = pymzml.run.Reader(file_path)
     for spectrum in run:
+        print( spectrum )
         if spectrum.ms_level == 1:  # Only process MS1 spectra
             retention_time = spectrum.scan_time_in_minutes()
             spectrum_id = spectrum.ID
@@ -64,7 +65,7 @@ mzml_dir = '/arc/project/st-ashapi01-1/bccs_mzml'
 try:
     years = int(sys.argv[1]) 
 except:
-    years = [ '2020', '2021', '2022', '2023', '2024']
+    years = [ 20,21,22,23,24]
 
 print( '\n\nInput argument:', years )
 
