@@ -5,6 +5,9 @@ import pymzml
 import os
 from tqdm import tqdm
 
+import sys
+print( sys.argv )
+
 # Function to process each mzML file and extract relevant m/z data
 def process_mzml_file(year, filename, relevant_mz_values, compound_name):
     file_path = os.path.join(mzml_dir, year, f"{filename}.mzML")
@@ -17,7 +20,7 @@ def process_mzml_file(year, filename, relevant_mz_values, compound_name):
     # Read mzML file
     run = pymzml.run.Reader(file_path)
     for spectrum in run:
-        print( spectrum )
+        # print( spectrum )
         if spectrum.ms_level == 1:  # Only process MS1 spectra
             retention_time = spectrum.scan_time_in_minutes()
             spectrum_id = spectrum.ID
@@ -63,7 +66,7 @@ mz_values_from_file2 = file2_filtered['m/z'].unique()
 # Specify the path to your mzML file
 mzml_dir = '/arc/project/st-ashapi01-1/bccs_mzml'
 try:
-    years = int(sys.argv[1]) 
+    years = np.int8( sys.argv[1] )  
 except:
     years = [ 20,21,22,23,24]
 
